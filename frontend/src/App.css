@@ -1,0 +1,62 @@
+body {
+  margin: 0;
+  background-color: #f5f1e8;
+  color: #222;
+  font-family: serif;
+}
+
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+h1 {
+  margin-bottom: 30px;
+}
+
+.item-card {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.item-card h2 {
+  margin: 0 0 10px;
+}
+
+.stock {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.header {
+  background: #171717;
+  color: #fff;
+  padding: 25px 20px; 
+  border-radius: 4px;
+}
+
+.logo {
+  color: #c9a45c;
+  letter-spacing: 4px;
+  font-size: 12px;
+  margin: 0;
+}
+
+.header h1 {
+  margin: 10px 0 0;
+  font-size: 32px;
+}
+
+.header button {
+  float: right;
+  margin-top: -45px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 30px;
+  background: #d6b16b;
+  font-size: 16px;
+}
