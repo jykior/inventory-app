@@ -27,4 +27,19 @@ public class ItemService {
   public void deleteItem(Long id) {
     itemRepository.deleteById(id);
   }
+
+  public Item updateItem(Long id, Item updateItem) {
+    Item item = itemRepository.findById(id).orElseThrow();
+    item.setName(updateItem.getName());
+    item.setCategory(updateItem.getCategory());
+    item.setCurrent_stock(updateItem.getCurrent_stock());
+    item.setMinStock(updateItem.getMinStock());
+    return itemRepository.save(item);
+  }
+
+  public Item updateStock(Long id, Integer newStock) {
+    Item item = itemRepository.findById(id).orElseThrow();
+    item.setCurrent_stock(newStock);
+    return itemRepository.save(item);
+  }
 }

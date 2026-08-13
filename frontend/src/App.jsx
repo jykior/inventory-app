@@ -14,7 +14,7 @@ const getStockPercentage = (stock, alert) => {
     return { percentage: 60, color: "#c9a45c" };
   }
   if (difference >= 3) {
-    return { percentage: 40, color: "#e8942f",backgroundColor: "#fff7ed" };
+    return { percentage: 40, color: "#e8942f", backgroundColor: "#fff7ed" };
   }
   if (difference >= 1) {
     return { percentage: 20, color: "#d93636", backgroundColor: "#fff0ed" };
@@ -31,7 +31,33 @@ function App() {
       .then((response) => response.json())
       .then((data) => setItems(data));
   }, []);
+  
+  const updateStock = async (item, newStock) => {
+    const response = await fetch(
+      `http://localhost:8080/api/items/${item.id}/stock`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          current_stock: newStock,
+        }),
+      },
+    );
 
+    const updatedItem = await response.json();
+
+    setItems((prevItems) =>
+      prevItems.map((item) => {
+        if (item.id === updatedItem.id) {
+          return updatedItem;
+        } else {
+          return item;
+        }
+      }),
+    );
+  };
   let filteredItems;
   if (selectedCategory === "すべて") {
     filteredItems = items;
@@ -47,7 +73,7 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <p className="logo">SALON INVENTORY</p>
+        <p className="logo">INVENTORY MANAGER</p>
         <h1>在庫管理</h1>
         <button>＋ 追加</button>
       </header>
@@ -94,13 +120,23 @@ function App() {
                 <h2>{item.name}</h2>
               </div>
               <div>
-                <span className="category">{item.category.name}</span>
+                <span className="category">{item.category?.name}</span>
                 <span className="alert">アラート数 {item.minStock}本</span>
               </div>
             </div>
 
             <div className="item-stock">
+              <button onClick={() => updateStock(item, item.current_stock - 1)}
+                disabled={item.current_stock === 0}>
+                −
+              </button>
+
               <strong>{item.current_stock}</strong>
+
+              <button onClick={() => updateStock(item, item.current_stock + 1)}>
+                ＋
+              </button>
+
               <span>本</span>
 
               <div className="stock-meter">
