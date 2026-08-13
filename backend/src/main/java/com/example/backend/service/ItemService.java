@@ -13,8 +13,18 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ItemService {
-private final ItemRepository itemRepository;
-  public List<Item> findAll(){
+
+  private final ItemRepository itemRepository;
+
+  public List<Item> findAll() {
     return itemRepository.findAll();
+  }
+
+  public Item createItem(Item item) {
+    return itemRepository.save(item);
+  }
+
+  public void deleteItem(Long id) {
+    itemRepository.deleteById(id);
   }
 }
