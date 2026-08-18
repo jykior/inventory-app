@@ -103,6 +103,20 @@ h1 {
   font-size: 14px;
 }
 
+.stock-number {
+  position: relative;
+  display: inline-block;
+}
+
+.stock-change {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
 .header {
   background: #171717;
   color: #fff;

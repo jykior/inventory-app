@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import ItemCard from "./components/ItemCard";
+import { getItems } from "./api/itemApi";
+import ItemModal from "./components/AddItemModal";
 
 const getStockPercentage = (stock, alert) => {
   const difference = stock - alert;
@@ -25,13 +28,19 @@ const getStockPercentage = (stock, alert) => {
 function App() {
   const [items, setItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("すべて");
+  const [selectedItemId, setSelectedItemId] = useState(null);
+  const [stockChanges, setStockChanges] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/items")
-      .then((response) => response.json())
-      .then((data) => setItems(data));
+    const fetchItems = async () => {
+      const data = await getItems();
+      setItems(data);
+    };
+
+    fetchItems();
   }, []);
-  
+
   const updateStock = async (item, newStock) => {
     const response = await fetch(
       `http://localhost:8080/api/items/${item.id}/stock`,
@@ -75,7 +84,7 @@ function App() {
       <header className="header">
         <p className="logo">INVENTORY MANAGER</p>
         <h1>在庫管理</h1>
-        <button>＋ 追加</button>
+        <button onClick={() => setIsModalOpen(true)}>＋ 追加</button>
       </header>
 
       {alertItems.length > 0 && (
@@ -98,60 +107,29 @@ function App() {
 
         <button onClick={() => setSelectedCategory("コスメ")}>コスメ</button>
       </div>
-
+      {/* 商品一覧 */}
       {filteredItems.map((item) => {
         const { percentage, color, backgroundColor } = getStockPercentage(
           item.current_stock,
           item.minStock,
         );
         return (
-          <div
-            className="item-card"
+          <ItemCard
             key={item.id}
-            style={{ backgroundColor: backgroundColor }}
-          >
-            <div
-              className="stock-status"
-              style={{ backgroundColor: color }}
-            ></div>
-
-            <div className="item-info">
-              <div className="item-name">
-                <h2>{item.name}</h2>
-              </div>
-              <div>
-                <span className="category">{item.category?.name}</span>
-                <span className="alert">アラート数 {item.minStock}本</span>
-              </div>
-            </div>
-
-            <div className="item-stock">
-              <button onClick={() => updateStock(item, item.current_stock - 1)}
-                disabled={item.current_stock === 0}>
-                −
-              </button>
-
-              <strong>{item.current_stock}</strong>
-
-              <button onClick={() => updateStock(item, item.current_stock + 1)}>
-                ＋
-              </button>
-
-              <span>本</span>
-
-              <div className="stock-meter">
-                <div
-                  className="stock-meter-fill"
-                  style={{
-                    height: `${percentage}%`,
-                    backgroundColor: color,
-                  }}
-                ></div>
-              </div>
-            </div>
-          </div>
+            item={item}
+            percentage={percentage}
+            color={color}
+            backgroundColor={backgroundColor}
+            selectedItemId={selectedItemId}
+            setSelectedItemId={setSelectedItemId}
+            stockChanges={stockChanges}
+            setStockChanges={setStockChanges}
+            updateStock={updateStock}
+          />
         );
       })}
+      {/* 商品追加モーダル */}
+      {isModalOpen && <ItemModal onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 }
