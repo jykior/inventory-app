@@ -21,6 +21,9 @@ public class ItemService {
   }
 
   public Item createItem(Item item) {
+    if (itemRepository.existsByName(item.getName())) {
+      throw new IllegalArgumentException("同じ商品名がすでに登録されています");
+    }
     return itemRepository.save(item);
   }
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import ItemCard from "./components/ItemCard";
-import { getItems } from "./api/itemApi";
+import { getItems, getCategories } from "./api/itemApi";
 import ItemModal from "./components/AddItemModal";
 
 const getStockPercentage = (stock, alert) => {
@@ -27,18 +27,25 @@ const getStockPercentage = (stock, alert) => {
 
 function App() {
   const [items, setItems] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("すべて");
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [stockChanges, setStockChanges] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const fetchItems = async () => {
+    const data = await getItems();
+    setItems(data);
+  };
   useEffect(() => {
-    const fetchItems = async () => {
-      const data = await getItems();
-      setItems(data);
+    fetchItems();
+    const fetchCategories = async () => {
+      const data = await getCategories();
+      setCategories(data);
     };
 
     fetchItems();
+    fetchCategories();
   }, []);
 
   const updateStock = async (item, newStock) => {
@@ -82,9 +89,30 @@ function App() {
   return (
     <div className="app">
       <header className="header">
-        <p className="logo">INVENTORY MANAGER</p>
-        <h1>在庫管理</h1>
-        <button onClick={() => setIsModalOpen(true)}>＋ 追加</button>
+        <div className="header-brand">
+          <img
+            src="/logo.png"
+            alt="Inventory Manager"
+            className="header-logo"
+          />
+
+          <div className="logo-content">
+            <h1>INVENTORY MANAGER</h1>
+
+            <div className="logo-decoration">
+              <span></span>
+              <i>◆</i>
+              <span></span>
+            </div>
+          </div>
+        </div>
+
+        <button
+          className="header-add-button"
+          onClick={() => setIsModalOpen(true)}
+        >
+          ＋ 追加
+        </button>
       </header>
 
       {alertItems.length > 0 && (
@@ -101,11 +129,14 @@ function App() {
       <div className="category-buttons">
         <button onClick={() => setSelectedCategory("すべて")}>すべて</button>
 
-        <button onClick={() => setSelectedCategory("カラー剤")}>
-          カラー剤
-        </button>
-
-        <button onClick={() => setSelectedCategory("コスメ")}>コスメ</button>
+        {categories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => setSelectedCategory(category.name)}
+          >
+            {category.name}
+          </button>
+        ))}
       </div>
       {/* 商品一覧 */}
       {filteredItems.map((item) => {
@@ -129,7 +160,7 @@ function App() {
         );
       })}
       {/* 商品追加モーダル */}
-      {isModalOpen && <ItemModal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && (<ItemModal onClose={() => setIsModalOpen(false)} onItemCreated={fetchItems} />)}
     </div>
   );
 }

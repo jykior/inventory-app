@@ -23,8 +23,8 @@ function ItemCard({
           <h2>{item.name}</h2>
         </div>
         <div>
-          <span className="category">{item.category?.name}</span>
-          <span className="alert">アラート数 {item.minStock}本</span>
+          <span className="item-category">{item.category?.name}</span>
+          <span className="item-alert">アラート数 {item.minStock}本</span>
         </div>
       </div>
 

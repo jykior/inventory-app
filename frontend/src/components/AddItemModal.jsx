@@ -1,25 +1,47 @@
-import { useState } from "react";
-import { createItem } from "../api/itemApi";
+import { useEffect, useState } from "react";
+import { createItem, getCategories } from "../api/itemApi";
 
-function AddItemModal({ onClose }) {
+function AddItemModal({ onClose,onItemCreated }) {
   const [name, setName] = useState("");
-  const [category, setCategory] = useState([]);
+  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
   const [currentStock, setCurrentStock] = useState(0);
   const [minStock, setMinStock] = useState(0);
   const [alertEnabled, setAlertEnabled] = useState(true);
+  const [error, setError] = useState("");
 
   const handleSubmit = async () => {
-    const item = {
-      name,
-      category,
-      current_stock: currentStock,
-      minStock,
-      alertEnabled,
+    setError();
+
+    if (!category) {
+      setError("カテゴリを選択してください");
+      return;
+    }
+    try {
+      const item = {
+        name,
+        category: { id: Number(category) },
+        current_stock: currentStock,
+        minStock,
+        alertEnabled,
+      };
+
+      await createItem(item);
+      await onItemCreated();
+      onClose();
+    } catch (error) {
+      setError("同じ商品名がすでに登録されています");
+    }
+  };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const data = await getCategories();
+      setCategories(data);
     };
 
-    await createItem(item);
-    onClose();
-  };
+    fetchCategories();
+  }, []);
 
   return (
     <div className="modal-overlay">
@@ -29,7 +51,7 @@ function AddItemModal({ onClose }) {
 
           <button onClick={onClose}>×</button>
         </div>
-
+        {error && <p className="form-error">{error}</p>}
         <label>
           商品名
           <input
@@ -46,8 +68,11 @@ function AddItemModal({ onClose }) {
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="">選択してください</option>
-            <option value="カラー剤">カラー剤</option>
-            <option value="パーマ剤">パーマ剤</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
           </select>
         </label>
 
