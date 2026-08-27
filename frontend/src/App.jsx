@@ -1,28 +1,34 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import ItemCard from "./components/ItemCard";
-import { getItems, getCategories } from "./api/itemApi";
+import {
+  getItems,
+  getCategories,
+  updateStock as updateStockApi,
+} from "./api/itemApi";
+import Items from "./components/Items";
 import ItemModal from "./components/AddItemModal";
+import Sidebar from "./components/Sidebar";
 
-const getStockPercentage = (stock, alert) => {
+const getStockStatus = (stock, alert) => {
   const difference = stock - alert;
 
-  if (difference >= 6) {
-    return { percentage: 100, color: "#c9a45c" };
-  }
-  if (difference >= 5) {
-    return { percentage: 80, color: "#c9a45c" };
-  }
   if (difference >= 4) {
-    return { percentage: 60, color: "#c9a45c" };
+    return { status: "正常", alertColor: "#289046" };
   }
   if (difference >= 3) {
-    return { percentage: 40, color: "#e8942f", backgroundColor: "#fff7ed" };
+    return {
+      status: "注意",
+      alertColor: "#e8942f",
+      alertBackgroundColor: "#fff7ed",
+      stockStatus: "少",
+    };
   }
-  if (difference >= 1) {
-    return { percentage: 20, color: "#d93636", backgroundColor: "#fff0ed" };
-  }
-  return { percentage: 0, color: "#d93636", backgroundColor: "#fff0ed" };
+  return {
+    status: "危険",
+    alertColor: "#d93636",
+    alertBackgroundColor: "#fff0ed",
+    stockStatus: "危",
+  };
 };
 
 function App() {
@@ -30,8 +36,9 @@ function App() {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("すべて");
   const [selectedItemId, setSelectedItemId] = useState(null);
-  const [stockChanges, setStockChanges] = useState({});
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [stockChange, setStockChange] = useState(0);
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState("items");
 
   const fetchItems = async () => {
     const data = await getItems();
@@ -49,20 +56,7 @@ function App() {
   }, []);
 
   const updateStock = async (item, newStock) => {
-    const response = await fetch(
-      `http://localhost:8080/api/items/${item.id}/stock`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          current_stock: newStock,
-        }),
-      },
-    );
-
-    const updatedItem = await response.json();
+    const updatedItem = await updateStockApi(item, newStock);
 
     setItems((prevItems) =>
       prevItems.map((item) => {
@@ -74,11 +68,12 @@ function App() {
       }),
     );
   };
-  let filteredItems;
+
+  let displayItems;
   if (selectedCategory === "すべて") {
-    filteredItems = items;
+    displayItems = items;
   } else {
-    filteredItems = items.filter(
+    displayItems = items.filter(
       (item) => item.category.name === selectedCategory,
     );
   }
@@ -88,79 +83,149 @@ function App() {
 
   return (
     <div className="app">
-      <header className="header">
-        <div className="header-brand">
-          <img
-            src="/logo.png"
-            alt="Inventory Manager"
-            className="header-logo"
-          />
-
-          <div className="logo-content">
-            <h1>INVENTORY MANAGER</h1>
-
-            <div className="logo-decoration">
-              <span></span>
-              <i>◆</i>
-              <span></span>
+      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <div className="content-area">
+        <header className="app-header">
+          <div className="header-user">
+            <div className="notification">
+              🔔
+              <span>3</span>
             </div>
+
+            <div className="user-avatar"></div>
+
+            <span className="user-name">スタッフ</span>
+
+            <span className="user-arrow">⌄</span>
           </div>
-        </div>
+        </header>
+        <div className="main-area">
+          {/*ホーム画面*/}
+          {currentPage === "home" && (
+            <>
+              <div>
+                <h1>ホーム</h1>
+                <p>在庫の全体状況を確認できます。</p>
+              </div>
+            </>
+          )}
 
-        <button
-          className="header-add-button"
-          onClick={() => setIsModalOpen(true)}
-        >
-          ＋ 追加
-        </button>
-      </header>
+          {/* 商品一覧画面 */}
+          {currentPage === "items" && (
+            <>
+              {alertItems.length > 0 && (
+                <div className="alert-box">
+                  <span>⚠️ 在庫注意</span>
+                  <span>
+                    <span>{alertItems.length}件の商品があります</span>
+                  </span>
+                </div>
+              )}
+              <div className="items-header">
+                <h1>商品一覧</h1>
+                <button
+                  className="item-add-button"
+                  onClick={() => setIsItemModalOpen(true)}
+                >
+                  ＋ 商品を追加
+                </button>
+              </div>
+              <div className="filter-area">
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                  <option value="すべて">すべてのカテゴリー</option>
 
-      {alertItems.length > 0 && (
-        <div className="alert-box">
-          <span>⚠️ 在庫注意アイテム</span>
-          {alertItems.length > 0 && (
-            <span>
-              {alertItems[0].name}・残{alertItems[0].current_stock}本
-            </span>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+
+                <select>
+                  <option value="すべて">すべての状態</option>
+                  <option value="正常">正常</option>
+                  <option value="注意">注意</option>
+                  <option value="危険">危険</option>
+                </select>
+
+                <div className="search-box">
+                  <span>⌕</span>
+                  <input type="text" placeholder="商品名で検索" />
+                </div>
+              </div>
+              {/* 商品一覧 */}
+              <table className="item-table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>商品名</th>
+                    <th>カテゴリ</th>
+                    <th>現在の在庫</th>
+                    <th>状態</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {displayItems.map((item) => (
+                    <Items
+                      key={item.id}
+                      item={item}
+                      alertColor={
+                        getStockStatus(item.current_stock, item.minStock)
+                          .alertColor
+                      }
+                      alertBackgroundColor={
+                        getStockStatus(item.current_stock, item.minStock)
+                          .alertBackgroundColor
+                      }
+                      stockStatus={
+                        getStockStatus(item.current_stock, item.minStock)
+                          .stockStatus
+                      }
+                      selectedItemId={selectedItemId}
+                      setSelectedItemId={setSelectedItemId}
+                      stockChange={stockChange}
+                      setStockChange={setStockChange}
+                      updateStock={updateStock}
+                      onItemDeleted={fetchItems}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </>
+          )}
+
+          {/*在庫注意画面*/}
+          {currentPage === "alerts" && (
+            <>
+              <div>
+                <h1>在庫注意</h1>
+              </div>
+            </>
+          )}
+
+          {/*設定画面*/}
+          {currentPage === "setting" && (
+            <>
+              <div>
+                <h1>設定</h1>
+              </div>
+            </>
           )}
         </div>
-      )}
 
-      <div className="category-buttons">
-        <button onClick={() => setSelectedCategory("すべて")}>すべて</button>
-
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => setSelectedCategory(category.name)}
-          >
-            {category.name}
-          </button>
-        ))}
-      </div>
-      {/* 商品一覧 */}
-      {filteredItems.map((item) => {
-        const { percentage, color, backgroundColor } = getStockPercentage(
-          item.current_stock,
-          item.minStock,
-        );
-        return (
-          <ItemCard
-            key={item.id}
-            item={item}
-            percentage={percentage}
-            color={color}
-            backgroundColor={backgroundColor}
-            selectedItemId={selectedItemId}
-            setSelectedItemId={setSelectedItemId}
-            stockChanges={stockChanges}
-            setStockChanges={setStockChanges}
-            updateStock={updateStock}
+        {/* 商品追加モーダル */}
+        {isItemModalOpen && (
+          <ItemModal
+            onClose={() => setIsItemModalOpen(false)}
+            onItemCreated={fetchItems}
           />
-        );
-      })}
-      {/* 商品追加モーダル */}
-      {isModalOpen && (<ItemModal onClose={() => setIsModalOpen(false)} onItemCreated={fetchItems} />)}
+        )}
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 package com.example.backend.controller;
 
 import com.example.backend.entity.Category;
-import com.example.backend.repository.CategoryRepository;
+import com.example.backend.service.CategoryService;
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,17 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/categories")
 public class CategoryController {
 
-  private final CategoryRepository categoryRepository;
+  private final CategoryService categoryService;
 
-  public CategoryController(CategoryRepository categoryRepository) {
-    this.categoryRepository = categoryRepository;
+  public CategoryController(CategoryService categoryService) {
+    this.categoryService = categoryService;
   }
+
   @GetMapping
-  public List<Category> getCategories(){
-    return categoryRepository.findAll();
+  public List<Category> getCategories() {
+    return categoryService.findAll();
   }
+
   @PostMapping
-  public Category createCategory(@RequestBody Category category){
-    return categoryRepository.save(category);
+  public Category createCategory(@RequestBody Category category) {
+    return categoryService.createCategory(category);
   }
 }

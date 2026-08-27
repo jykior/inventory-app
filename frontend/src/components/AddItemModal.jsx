@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { createItem, getCategories } from "../api/itemApi";
+import AddCategoryModal from "./AddCategoryModal";
 
-function AddItemModal({ onClose,onItemCreated }) {
+function AddItemModal({ onClose, onItemCreated }) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState([]);
@@ -9,17 +10,22 @@ function AddItemModal({ onClose,onItemCreated }) {
   const [minStock, setMinStock] = useState(0);
   const [alertEnabled, setAlertEnabled] = useState(true);
   const [error, setError] = useState("");
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   const handleSubmit = async () => {
-    setError();
+    setError("");
 
+    if(!name.trim()){
+      setError("商品名を入力してください");
+      return;
+    }
     if (!category) {
       setError("カテゴリを選択してください");
       return;
     }
     try {
       const item = {
-        name,
+        name: name.trim(),
         category: { id: Number(category) },
         current_stock: currentStock,
         minStock,
@@ -44,9 +50,9 @@ function AddItemModal({ onClose,onItemCreated }) {
   }, []);
 
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <div className="modal-header">
+    <div className="item-modal-overlay">
+      <div className="item-modal">
+        <div className="item-modal-header">
           <h2>商品を追加</h2>
 
           <button onClick={onClose}>×</button>
@@ -60,21 +66,20 @@ function AddItemModal({ onClose,onItemCreated }) {
             onChange={(e) => setName(e.target.value)}
           />
         </label>
-
-        <label>
-          カテゴリ
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="">選択してください</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="category-add">
+          <label>カテゴリ</label>
+          <button type="button" onClick={() => setIsCategoryModalOpen(true)}>
+            ＋追加
+          </button>
+        </div>
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="">選択してください</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
 
         <label>
           現在の在庫数
@@ -107,6 +112,11 @@ function AddItemModal({ onClose,onItemCreated }) {
           保存する
         </button>
       </div>
+
+      {/*カテゴリ追加モーダル*/}
+      {isCategoryModalOpen && (
+        <AddCategoryModal onClose={() => setIsCategoryModalOpen(false)} />
+      )}
     </div>
   );
 }
