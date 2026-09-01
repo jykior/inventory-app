@@ -42,9 +42,12 @@ function Items({
         <div className="item-stock">
           {selectedItemId === item.id && (
             <button
+              className="stock-control"
               onClick={(e) => {
                 e.stopPropagation();
-                setStockChange((prev) => prev - 1);
+                setStockChange((prev) =>
+                  Math.max(prev - 1, -item.current_stock),
+                );
               }}
               disabled={item.current_stock === 0}
             >
@@ -53,15 +56,16 @@ function Items({
           )}
           <span className="stock-number">
             {selectedItemId === item.id && stockChange !== 0 && (
-              <small className="stock-change">
+              <span className="stock-change">
                 {stockChange > 0 ? "+" : ""}
                 {stockChange}
-              </small>
+              </span>
             )}
-            <strong>{item.current_stock}</strong>
+            <span>{item.current_stock}</span>
           </span>
           {selectedItemId === item.id && (
             <button
+              className="stock-control"
               onClick={(e) => {
                 e.stopPropagation();
                 setStockChange((prev) => prev + 1);
@@ -72,17 +76,17 @@ function Items({
           )}
           {selectedItemId === item.id && (
             <button
+              className="stock-decision"
               onClick={(e) => {
                 e.stopPropagation();
-                const change = stockChange;
-                if (change !== 0) {
-                  updateStock(item, item.current_stock + change);
+                if (stockChange !== 0) {
+                  updateStock(item, item.current_stock + stockChange);
                 }
                 setStockChange(0);
                 setSelectedItemId(null);
               }}
             >
-              決定
+              ✓
             </button>
           )}
         </div>
@@ -98,13 +102,14 @@ function Items({
       <td>
         {selectedItemId === item.id && (
           <button
+            className="item-delete"
             onClick={async (e) => {
               e.stopPropagation();
               await deleteItem(item.id);
               await onItemDeleted();
             }}
           >
-            削除
+            🗑
           </button>
         )}
       </td>

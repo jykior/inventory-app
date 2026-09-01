@@ -131,7 +131,7 @@ body {
 
 /* 商品一覧 */
 .alert-box {
-  margin: 12px ;
+  margin: 12px;
   padding: 6px 20px;
   background: #fff3e0;
   border-left: 4px solid #e8942f;
@@ -299,20 +299,68 @@ body {
 .item-stock {
   font-size: 24px;
   font-weight: bold;
-}
-
-.item-action {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 6px;
 }
 
-.item-action button {
-  border: none;
-  background: transparent;
-  padding: 6px;
-  font-size: 18px;
+.stock-number {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stock-change {
+  font-size: 14px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.stock-control {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #d6b56c;
+  border-radius: 6px;
+  background: #f8f4eb;
+  color: #333;
+  font-size: 16px;
   cursor: pointer;
+}
+.stock-control:hover {
+  background: #eee4d2;
+}
+.stock-control:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.stock-decision {
+  width: 28px;
+  height: 28px;
+  margin-left: 4px;
+  border: none;
+  border-radius: 50%;
+  background: #c9a45c;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+.stock-decision:hover {
+  background: #b38d43;
+}
+
+.item-delete {
+  padding: 6px 12px;
+  border: 1px solid #d8bebe;
+  border-radius: 6px;
+  background: #fff8f7;
+  font-size: 20px;
+  cursor: pointer;
+}
+.item-delete:hover {
+  background: #f9e8e5;
 }
 /*商品追加モーダル*/
 .item-modal-overlay {
@@ -335,10 +383,6 @@ body {
   padding: 10px 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
-}
-
-.item-modal label {
-  font-size: 10px;
 }
 
 .item-modal-header {
@@ -365,6 +409,7 @@ body {
 .item-modal label {
   display: block;
   margin-bottom: 6px;
+  font-size: 10px;
   font-weight: bold;
 }
 

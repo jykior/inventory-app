@@ -20,7 +20,7 @@ const getStockStatus = (stock, alert) => {
       status: "注意",
       alertColor: "#e8942f",
       alertBackgroundColor: "#fff7ed",
-      stockStatus: "少",
+      stockStatus: "注",
     };
   }
   return {

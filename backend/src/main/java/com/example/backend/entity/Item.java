@@ -1,6 +1,5 @@
 package com.example.backend.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,21 +24,17 @@ public class Item {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
   private String name;
 
 @ManyToOne
-@JoinColumn(name = "category_id",nullable = false)
+@JoinColumn(name = "category_id")
   private Category category;
 
-  @Column(nullable = false)
   private Integer current_stock;
 
-  @Column(nullable = false)
   private Boolean alertEnabled;
 
-  @Column(nullable = false)
   private Integer minStock;
 
-  private Integer sortOder;
+  private Integer sortOrder;
 }
