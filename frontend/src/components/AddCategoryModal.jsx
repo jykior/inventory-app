@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createCategory } from "../api/itemApi";
 
-function AddCategoryModal({ onClose }) {
+function AddCategoryModal({ onClose,onCategoryCreated }) {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [colorCode, setColorCode] = useState();
@@ -22,6 +22,7 @@ function AddCategoryModal({ onClose }) {
     }
     try {
       await createCategory({ name: name.trim(),colorCode:colorCode });
+      await onCategoryCreated();
       onClose();
     } catch (error) {
       setError("同じカテゴリ名がすでに登録されています");

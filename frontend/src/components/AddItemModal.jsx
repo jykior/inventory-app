@@ -41,13 +41,11 @@ function AddItemModal({ onClose, onItemCreated }) {
       setError("同じ商品名がすでに登録されています");
     }
   };
-
+  const fetchCategories = async () => {
+    const data = await getCategories();
+    setCategories(data);
+  };
   useEffect(() => {
-    const fetchCategories = async () => {
-      const data = await getCategories();
-      setCategories(data);
-    };
-
     fetchCategories();
   }, []);
 
@@ -69,7 +67,9 @@ function AddItemModal({ onClose, onItemCreated }) {
           />
         </label>
         <div className="category-add">
-          <label>カテゴリ<span> *</span></label>
+          <label>
+            カテゴリ<span> *</span>
+          </label>
           <button type="button" onClick={() => setIsCategoryModalOpen(true)}>
             ＋追加
           </button>
@@ -134,7 +134,8 @@ function AddItemModal({ onClose, onItemCreated }) {
 
       {/*カテゴリ追加モーダル*/}
       {isCategoryModalOpen && (
-        <AddCategoryModal onClose={() => setIsCategoryModalOpen(false)} />
+        <AddCategoryModal onClose={() => setIsCategoryModalOpen(false)}
+        onCategoryCreated={fetchCategories} />
       )}
     </div>
   );
