@@ -17,7 +17,7 @@ public class ItemService {
   private final ItemRepository itemRepository;
 
   public List<Item> findAll() {
-    return itemRepository.findAll();
+    return itemRepository.findAllByOrderBySortOrderAsc();
   }
 
   public Item createItem(Item item) {

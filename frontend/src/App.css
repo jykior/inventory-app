@@ -291,7 +291,6 @@ body {
 .item-category {
   display: inline-block;
   padding: 6px 12px;
-  background: #f0ece2;
   border-radius: 8px;
   font-size: 12px;
 }
@@ -362,25 +361,25 @@ body {
 .item-delete:hover {
   background: #f9e8e5;
 }
+
 /*商品追加モーダル*/
 .item-modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   z-index: 1000;
 }
 
 .item-modal {
   width: 90%;
-  max-width: 300px;
+  max-width: 500px;
+  min-height: 600px;
   background: #fffdf8;
   border-radius: 16px;
-  padding: 10px 12px;
+  padding: 24px 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
 }
@@ -408,9 +407,19 @@ body {
 
 .item-modal label {
   display: block;
-  margin-bottom: 6px;
-  font-size: 10px;
+  margin-bottom: 14px;
+  font-size: 14px;
   font-weight: bold;
+}
+
+.item-modal span{
+  color: red;
+}
+.item-modal p{
+  font-size: 10px;
+}
+.category-select {
+  margin-bottom: 18px;
 }
 
 .item-modal input,
@@ -418,19 +427,19 @@ body {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  margin-top: 4px;
-  padding: 6px 10px;
+  margin-top: 8px;
+  padding: 10px 10px;
   border: 1px solid #ddd6ca;
   border-radius: 10px;
   background: #fff;
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .alert-setting {
   display: flex !important;
   align-items: center;
   gap: 6px;
-  margin-bottom: 8px;
+  margin-bottom: 14px;
 }
 
 .alert-setting input {
@@ -511,6 +520,26 @@ body {
   margin-bottom: 24px;
   font-size: 13px;
   font-weight: bold;
+}
+
+.category-color-list {
+  display: flex;
+  gap: 10px;
+  margin: 8px 0 20px;
+}
+
+.category-color {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.category-color.selected {
+  border-color: #333;
+  box-shadow: 0 0 0 2px #fff;
 }
 
 .category-modal input {

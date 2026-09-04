@@ -4,14 +4,24 @@ import { createCategory } from "../api/itemApi";
 function AddCategoryModal({ onClose }) {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [colorCode, setColorCode] = useState();
+
+  const colors = [
+    "rgba(108, 195, 196, 0.5)",
+    "rgba(230, 230, 14,0.5)",    ,
+    "rgba(64, 0, 239, 0.5)",
+    "rgba(29, 201, 34,0.5)",
+    "rgba(218, 133, 212,0.5)",
+    "rgba(237, 127, 18,0.5)",
+  ];
 
   const handleSubmit = async () => {
-    if(!name.trim()){
+    if (!name.trim()) {
       setError("カテゴリ名を入力してください");
       return;
     }
     try {
-      await createCategory({ name: name.trim() });
+      await createCategory({ name: name.trim(),colorCode:colorCode });
       onClose();
     } catch (error) {
       setError("同じカテゴリ名がすでに登録されています");
@@ -34,6 +44,22 @@ function AddCategoryModal({ onClose }) {
             onChange={(e) => setName(e.target.value)}
           />
         </label>
+
+        <label>カテゴリカラ―</label>
+
+        <div className="category-color-kist">
+          {colors.map((color) => (
+            <button
+              key={color}
+              type="button"
+              className={`category-color ${
+                colorCode === color ? "selected" : ""
+              }`}
+              style={{ backgroundColor: color }}
+              onClick={() => setColorCode(color)}
+            />
+          ))}
+        </div>
 
         <button className="save-button" onClick={handleSubmit}>
           追加する

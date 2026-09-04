@@ -77,6 +77,7 @@ function App() {
       (item) => item.category.name === selectedCategory,
     );
   }
+  
   const alertItems = items.filter(
     (item) => item.current_stock <= item.minStock,
   );

@@ -35,7 +35,12 @@ function Items({
       </td>
 
       <td>
-        <span className="item-category">{item.category?.name}</span>
+        <span
+          className="item-category"
+          style={{ backgroundColor: item.category?.colorCode }}
+        >
+          {item.category?.name}
+        </span>
       </td>
 
       <td>

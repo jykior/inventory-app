@@ -6,16 +6,17 @@ function AddItemModal({ onClose, onItemCreated }) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState([]);
-  const [currentStock, setCurrentStock] = useState(0);
-  const [minStock, setMinStock] = useState(0);
+  const [currentStock, setCurrentStock] = useState("");
+  const [minStock, setMinStock] = useState("");
   const [alertEnabled, setAlertEnabled] = useState(true);
   const [error, setError] = useState("");
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [sortOrder, setSortOrder] = useState("");
 
   const handleSubmit = async () => {
     setError("");
 
-    if(!name.trim()){
+    if (!name.trim()) {
       setError("商品名を入力してください");
       return;
     }
@@ -30,6 +31,7 @@ function AddItemModal({ onClose, onItemCreated }) {
         current_stock: currentStock,
         minStock,
         alertEnabled,
+        sortOrder: sortOrder,
       };
 
       await createItem(item);
@@ -59,7 +61,7 @@ function AddItemModal({ onClose, onItemCreated }) {
         </div>
         {error && <p className="form-error">{error}</p>}
         <label>
-          商品名
+          商品名<span> *</span>
           <input
             type="text"
             value={name}
@@ -67,12 +69,16 @@ function AddItemModal({ onClose, onItemCreated }) {
           />
         </label>
         <div className="category-add">
-          <label>カテゴリ</label>
+          <label>カテゴリ<span> *</span></label>
           <button type="button" onClick={() => setIsCategoryModalOpen(true)}>
             ＋追加
           </button>
         </div>
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <select
+          className="category-select"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
           <option value="">選択してください</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
@@ -82,9 +88,10 @@ function AddItemModal({ onClose, onItemCreated }) {
         </select>
 
         <label>
-          現在の在庫数
+          現在の在庫数<span> *</span>
           <input
             type="number"
+            min="0"
             value={currentStock}
             onChange={(e) => setCurrentStock(Number(e.target.value))}
           />
@@ -100,12 +107,24 @@ function AddItemModal({ onClose, onItemCreated }) {
         </label>
 
         <label>
-          アラート数
+          アラート数 (下回ったら通知)
           <input
             type="number"
+            min="0"
             value={minStock}
             onChange={(e) => setMinStock(Number(e.target.value))}
           />
+        </label>
+
+        <label>
+          並び順
+          <input
+            type="number"
+            min="0"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(Number(e.target.value))}
+          />
+          <p>※ 数字が小さいほど上に表示されます</p>
         </label>
 
         <button className="save-button" onClick={handleSubmit}>
