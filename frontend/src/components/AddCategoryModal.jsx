@@ -9,7 +9,7 @@ function AddCategoryModal({ onClose,onCategoryCreated }) {
   const colors = [
     "rgba(108, 195, 196, 0.5)",
     "rgba(230, 230, 14,0.5)",    ,
-    "rgba(64, 0, 239, 0.5)",
+    "rgba(103, 51, 246, 0.5)",
     "rgba(29, 201, 34,0.5)",
     "rgba(218, 133, 212,0.5)",
     "rgba(237, 127, 18,0.5)",

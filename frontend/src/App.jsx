@@ -8,6 +8,7 @@ import {
 import Items from "./components/Items";
 import ItemModal from "./components/AddItemModal";
 import Sidebar from "./components/Sidebar";
+import Login from "./components/Login";
 
 const getStockStatus = (stock, alert) => {
   const difference = stock - alert;
@@ -39,6 +40,9 @@ function App() {
   const [stockChange, setStockChange] = useState(0);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState("items");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const fetchItems = async () => {
     const data = await getItems();
@@ -50,9 +54,30 @@ function App() {
       const data = await getCategories();
       setCategories(data);
     };
-
     fetchItems();
     fetchCategories();
+
+    const savedUser = sessionStorage.getItem("user");
+
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      setUser(user);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(".header-user")) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, []);
 
   const updateStock = async (item, newStock) => {
@@ -77,10 +102,28 @@ function App() {
       (item) => item.category.name === selectedCategory,
     );
   }
-  
+
   const alertItems = items.filter(
     (item) => item.current_stock <= item.minStock,
   );
+
+  if (!isLoggedIn) {
+    return (
+      <Login
+        onLogin={(user) => {
+          setUser(user);
+          setIsLoggedIn(true);
+          sessionStorage.setItem("user", JSON.stringify(user));
+        }}
+      />
+    );
+  }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("user");
+    setUser(null);
+    setIsLoggedIn(false);
+  };
 
   return (
     <div className="app">
@@ -88,16 +131,21 @@ function App() {
       <div className="content-area">
         <header className="app-header">
           <div className="header-user">
-            <div className="notification">
-              🔔
-              <span>3</span>
-            </div>
+            <div className="user-avatar">👤</div>
 
-            <div className="user-avatar"></div>
+            <span className="user-name">{user?.nickName}</span>
 
-            <span className="user-name">スタッフ</span>
-
-            <span className="user-arrow">⌄</span>
+            <button
+              className="user-arrow"
+              onClick={() => setShowUserMenu(!showUserMenu)}
+            >
+              ⌄
+            </button>
+            {showUserMenu && (
+              <div className="user-menu">
+                <button onClick={handleLogout}>ログアウト</button>
+              </div>
+            )}
           </div>
         </header>
         <div className="main-area">

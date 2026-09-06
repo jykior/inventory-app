@@ -205,6 +205,7 @@ Reactを採用しました。
 | email         | メールアドレス      |
 | password_hash | ハッシュ化したパスワード |
 | role          | 権限           |
+| nickname      | ニックネーム       |
 
 ### categories
 
@@ -245,6 +246,7 @@ BIGINT id PK
 VARCHAR email
 VARCHAR password_hash
 VARCHAR role
+VARCHAR nickname
 }
 
 CATEGORIES {
@@ -331,9 +333,14 @@ npm run dev
 - ✅ 商品一覧表示
 - ✅ カテゴリによる絞り込み 
 - ✅ 在庫数の増減・更新
-- ⬜ 商品・カテゴリの並び替え
-- ⬜ 在庫注意商品の表示
+- ✅ ログイン機能
+- ✅ ログイン画面作成
+- ⬜ Spring Security導入
+- ⬜ ユーザー新規登録機能 
 - ⬜ 商品・カテゴリの編集
-- ⬜ ログイン・認証機能
+- ⬜ 商品の並び替え
+- ⬜ 在庫注意画面作成
+- ⬜ 在庫注意商品の表示
+- ⬜ ホーム画面作成
 - ⬜ AWS RDSへの移行
 - ⬜ デプロイ・公開

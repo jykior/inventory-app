@@ -9,9 +9,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+
 /**
- * 商品（在庫アイテム）を表すクラス。
- * カテゴリに紐づき、現在庫数・アラート通知数などの情報を持つ。
+ * 商品（在庫アイテム）を表すクラス。 カテゴリに紐づき、現在庫数・アラート通知数などの情報を持つ。
  */
 @Entity
 @Table(name = "items")
@@ -26,8 +26,8 @@ public class Item {
 
   private String name;
 
-@ManyToOne
-@JoinColumn(name = "category_id")
+  @ManyToOne
+  @JoinColumn(name = "category_id")
   private Category category;
 
   private Integer current_stock;
