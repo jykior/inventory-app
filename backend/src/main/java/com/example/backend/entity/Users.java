@@ -9,12 +9,15 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ *ユーザー情報を管理するエンティティクラス。メールアドレス、パスワード、権限、ニックネームなどのユーザー情報を保持する。
+ */
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 
-public class User {
+public class Users {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,5 +30,5 @@ public class User {
 
   private String role;
 
-  private String nickname;
+  private String nickName;
 }

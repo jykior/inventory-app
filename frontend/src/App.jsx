@@ -11,24 +11,22 @@ import Sidebar from "./components/Sidebar";
 import Login from "./components/Login";
 
 const getStockStatus = (stock, alert) => {
-  const difference = stock - alert;
-
-  if (difference >= 4) {
+  if (stock >= alert + 3) {
     return { status: "正常", alertColor: "#289046" };
   }
-  if (difference >= 3) {
+  if (stock > alert) {
     return {
-      status: "注意",
+      status: "少ない",
       alertColor: "#e8942f",
       alertBackgroundColor: "#fff7ed",
-      stockStatus: "注",
+      stockStatus: "少",
     };
   }
   return {
-    status: "危険",
+    status: "注意",
     alertColor: "#d93636",
     alertBackgroundColor: "#fff0ed",
-    stockStatus: "危",
+    stockStatus: "注意",
   };
 };
 
@@ -49,7 +47,6 @@ function App() {
     setItems(data);
   };
   useEffect(() => {
-    fetchItems();
     const fetchCategories = async () => {
       const data = await getCategories();
       setCategories(data);
@@ -106,17 +103,14 @@ function App() {
   const alertItems = items.filter(
     (item) => item.current_stock <= item.minStock,
   );
-
+  
+  const handleLogin = (user) => {
+    setUser(user);
+    setIsLoggedIn(true);
+    sessionStorage.setItem("user", JSON.stringify(user));
+  };
   if (!isLoggedIn) {
-    return (
-      <Login
-        onLogin={(user) => {
-          setUser(user);
-          setIsLoggedIn(true);
-          sessionStorage.setItem("user", JSON.stringify(user));
-        }}
-      />
-    );
+    return <Login onLogin={handleLogin} />;
   }
 
   const handleLogout = () => {

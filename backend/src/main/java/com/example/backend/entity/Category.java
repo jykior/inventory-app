@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 /**
- * 商品カテゴリーの情報を管理するクラス。
+ * 商品カテゴリーの情報を管理するエンティティクラス。
  */
 @Entity
 @Table(name = "categories")

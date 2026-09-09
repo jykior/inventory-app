@@ -1,11 +1,14 @@
 export const getItems = async () => {
-  const response = await fetch("http://localhost:8080/api/items");
-
+  const response = await fetch("http://localhost:8080/api/items", {
+    credentials: "include",
+  });
   return response.json();
 };
 
 export const getCategories = async () => {
-  const response = await fetch("http://localhost:8080/api/categories");
+  const response = await fetch("http://localhost:8080/api/categories", {
+    credentials: "include",
+  });
   return response.json();
 };
 
@@ -15,6 +18,7 @@ export const createItem = async (item) => {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify(item),
   });
   if (!response.ok) {
@@ -29,9 +33,10 @@ export const createCategory = async (category) => {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify(category),
   });
-    if (!response.ok) {
+  if (!response.ok) {
     throw new Error();
   }
   return response.json();
@@ -45,6 +50,7 @@ export const updateStock = async (item, newStock) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         current_stock: newStock,
       }),
@@ -57,5 +63,6 @@ export const updateStock = async (item, newStock) => {
 export const deleteItem = async (id) => {
   const response = await fetch(`http://localhost:8080/api/items/${id}`, {
     method: "DELETE",
+    credentials: "include",
   });
 };

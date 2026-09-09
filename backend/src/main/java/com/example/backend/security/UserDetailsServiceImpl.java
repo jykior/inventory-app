@@ -1,0 +1,31 @@
+package com.example.backend.security;
+
+import com.example.backend.entity.Users;
+import com.example.backend.repository.UsersRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Service;
+
+/**
+ * Spring Securityのユーザー情報を提供するサービスクラス。
+ */
+@Service
+@RequiredArgsConstructor
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+  private final UsersRepository usersRepository;
+
+  @Override
+  public UserDetails loadUserByUsername(String email) {
+    Users users = usersRepository.findByEmail(email).orElseThrow();
+
+    return User
+        .withUsername(users.getEmail())
+        .password(users.getPasswordHash())
+        .roles(users.getRole())
+        .build();
+
+  }
+}

@@ -59,7 +59,7 @@ function AddItemModal({ onClose, onItemCreated }) {
         </div>
         {error && <p className="form-error">{error}</p>}
         <label>
-          商品名<span> *</span>
+          商品名<span className="required"> *</span>
           <input
             type="text"
             value={name}
@@ -68,7 +68,7 @@ function AddItemModal({ onClose, onItemCreated }) {
         </label>
         <div className="category-add">
           <label>
-            カテゴリ<span> *</span>
+            カテゴリ<span className="required"> *</span>
           </label>
           <button type="button" onClick={() => setIsCategoryModalOpen(true)}>
             ＋追加
@@ -88,7 +88,7 @@ function AddItemModal({ onClose, onItemCreated }) {
         </select>
 
         <label>
-          現在の在庫数<span> *</span>
+          現在の在庫数<span className="required"> *</span>
           <input
             type="number"
             min="0"
@@ -134,8 +134,10 @@ function AddItemModal({ onClose, onItemCreated }) {
 
       {/*カテゴリ追加モーダル*/}
       {isCategoryModalOpen && (
-        <AddCategoryModal onClose={() => setIsCategoryModalOpen(false)}
-        onCategoryCreated={fetchCategories} />
+        <AddCategoryModal
+          onClose={() => setIsCategoryModalOpen(false)}
+          onCategoryCreated={fetchCategories}
+        />
       )}
     </div>
   );

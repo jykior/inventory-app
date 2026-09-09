@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { login } from "../api/authApi";
+import UserRegisterModal from "./UserRegisterModal";
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showUserRegister, setShowUserRegister] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +31,7 @@ function Login({ onLogin }) {
       setError("パスワードは6文字以上の英数字で入力してください");
       return;
     }
-    
+
     try {
       const user = await login(email, password);
       onLogin(user);
@@ -53,24 +55,33 @@ function Login({ onLogin }) {
         <p className="login-message">在庫状況をいつでも正確に。</p>
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="login-input">
-            <span className="login-icon">✉</span>
-            <input
-              type="email"
-              placeholder="メールアドレス"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+          <div className="login-field">
+            <label>
+              <span className="login-text">メールアドレス</span>
+            </label>
+            <div className="login-input">
+              <span className="login-icon">✉</span>
+              <input
+                type="email"
+                placeholder="メールアドレス"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
           </div>
-
-          <div className="login-input">
-            <span className="login-icon">♙</span>
-            <input
-              type="password"
-              placeholder="パスワード"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+          <div className="login-field">
+            <label>
+              <span className="login-text">パスワード</span>
+            </label>
+            <div className="login-input">
+              <span className="login-icon">🗝</span>
+              <input
+                type="password"
+                placeholder="パスワード"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
           </div>
 
           {error && <p className="login-error">{error}</p>}
@@ -87,7 +98,11 @@ function Login({ onLogin }) {
         </div>
 
         <div className="login-sub-buttons">
-          <button type="button" className="register-button">
+          <button
+            type="button"
+            className="user-register-button"
+            onClick={() => setShowUserRegister(true)}
+          >
             <span>♙</span>
             新規登録
           </button>
@@ -98,6 +113,9 @@ function Login({ onLogin }) {
           </button>
         </div>
       </div>
+      {showUserRegister && (
+        <UserRegisterModal onClose={() => setShowUserRegister(false)} />
+      )}
     </div>
   );
 }

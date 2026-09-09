@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 商品情報に関するAPIを提供するコントローラークラス。
+ */
 @RestController
 @RequestMapping("/api/items")
 @RequiredArgsConstructor

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * 在庫商品の取得や管理を行うクラス。
+ * 在庫商品の取得や管理を行うサービスクラス。
  */
 @Service
 @RequiredArgsConstructor

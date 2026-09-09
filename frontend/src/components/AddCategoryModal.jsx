@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { createCategory } from "../api/itemApi";
 
-function AddCategoryModal({ onClose,onCategoryCreated }) {
+function AddCategoryModal({ onClose, onCategoryCreated }) {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [colorCode, setColorCode] = useState();
 
   const colors = [
     "rgba(108, 195, 196, 0.5)",
-    "rgba(230, 230, 14,0.5)",    ,
+    "rgba(230, 230, 14,0.5)",
     "rgba(103, 51, 246, 0.5)",
     "rgba(29, 201, 34,0.5)",
     "rgba(218, 133, 212,0.5)",
@@ -21,7 +21,7 @@ function AddCategoryModal({ onClose,onCategoryCreated }) {
       return;
     }
     try {
-      await createCategory({ name: name.trim(),colorCode:colorCode });
+      await createCategory({ name: name.trim(), colorCode: colorCode });
       await onCategoryCreated();
       onClose();
     } catch (error) {
@@ -38,7 +38,7 @@ function AddCategoryModal({ onClose,onCategoryCreated }) {
         </div>
         {error && <p className="form-error">{error}</p>}
         <label>
-          カテゴリ名
+          カテゴリ名<span className="required"> *</span>
           <input
             type="text"
             value={name}
@@ -46,9 +46,11 @@ function AddCategoryModal({ onClose,onCategoryCreated }) {
           />
         </label>
 
-        <label>カテゴリカラ―</label>
+        <label>
+          カテゴリカラ―<span className="required"> *</span>
+        </label>
 
-        <div className="category-color-kist">
+        <div className="category-color-list">
           {colors.map((color) => (
             <button
               key={color}

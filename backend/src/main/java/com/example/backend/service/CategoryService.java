@@ -7,9 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * カテゴリの取得や管理を行うクラス
+ * カテゴリの取得や管理を行うサービスクラス。
  */
-
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
