@@ -17,11 +17,11 @@ function AddItemModal({ onClose, onItemCreated }) {
     setError("");
 
     if (!name.trim()) {
-      setError("商品名を入力してください");
+      setError("※商品名を入力してください※");
       return;
     }
     if (!category) {
-      setError("カテゴリを選択してください");
+      setError("※カテゴリを選択してください※");
       return;
     }
     try {
@@ -38,7 +38,7 @@ function AddItemModal({ onClose, onItemCreated }) {
       await onItemCreated();
       onClose();
     } catch (error) {
-      setError("同じ商品名がすでに登録されています");
+      setError("※同じ商品名がすでに登録されています※");
     }
   };
   const fetchCategories = async () => {
@@ -50,14 +50,16 @@ function AddItemModal({ onClose, onItemCreated }) {
   }, []);
 
   return (
-    <div className="item-modal-overlay">
+    <div className="modal-overlay">
       <div className="item-modal">
         <div className="item-modal-header">
           <h2>商品を追加</h2>
 
           <button onClick={onClose}>×</button>
         </div>
+
         {error && <p className="form-error">{error}</p>}
+        
         <label>
           商品名<span className="required"> *</span>
           <input

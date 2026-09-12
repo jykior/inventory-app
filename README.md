@@ -1,5 +1,4 @@
-# INVENTORY MANAGER
-
+![](images/INVENTORYMANAGER.png)
 ## 概要
 
 店舗で使用する商品の在庫を管理するWebアプリです。
@@ -7,7 +6,6 @@
 商品ごとの在庫数を簡単に確認・更新できるほか、
 設定した基準値を下回った商品を在庫注意として確認できるようにすることで、
 発注が必要な商品の見落としを防ぎ、店舗の在庫管理を効率化します。
-
 
 ## 制作背景
 
@@ -53,7 +51,7 @@
 - 在庫数の増減・更新
 - ユーザー登録とログイン・ログアウト機能
 
-## 主な使用技術
+## 🔧主な使用技術
 
 ### バックエンド
 
@@ -116,17 +114,39 @@ Reactを採用しました。
 
 ### 在庫数の増減処理
 
-#### 課題
+#### 【問題】
 
-在庫数の増減操作による誤操作を防ぐため、増減値を一時的に保持し、
-確認後に在庫数を変更する必要がありました。
+在庫数の増減操作による誤操作を防ぐため、増減値を一時的に保持し、確認後に在庫数を変更する必要がありました。
 
-#### 解決策
+#### 【原因】
 
-在庫数変更専用のAPIを用意し、フロントエンドでは増減値を一時的に状態管理する構成にして、
-確定時に在庫数変更APIへ送信し、バックエンドでデータベースの在庫数を更新するようにしました。
+在庫数を直接変更すると、誤操作によって意図しない在庫数になる可能性がありました。
 
+#### 【解決策】
+
+在庫数変更専用のAPIを用意し、フロントエンドでは増減値を一時的に状態管理する構成にして、確定時に在庫数変更APIへ送信し、バックエンドでデータベースの在庫数を更新するようにしました。
 また、在庫数の変更と商品情報の更新を分けて、それぞれ別の処理として管理しました。
+
+### Spring Security導入後のエラー処理
+
+#### 【問題】
+
+ユーザー登録・ログイン時のエラーを、状況に応じて適切なHTTPステータス（409・401・400）として返すようにしましたが、
+まずメールアドレス重複時に409 Conflictを返す実装をしたところ、実際には403 Forbiddenが返る問題が発生しました。
+
+#### 【原因】
+
+Spring Bootのエラー処理で使用される/errorがSpring Securityの認証対象となっており、エラー処理時に403が返されていました。
+
+#### 【解決策】
+
+/errorをpermitAll()に追加することで、意図したHTTPステータスを返せるようになりました。
+その上で、
+- メールアドレス重複 → 409 Conflict
+- ログイン認証失敗 → 401 Unauthorized 
+- パスワード不一致 → 400 Bad Request
+
+としてエラー処理を実装しました。
 
 ## 画面構成
 
@@ -205,12 +225,12 @@ Reactを採用しました。
 
 ### categories
 
-| カラム        | 内容  |
-|------------|-----|
-| id         | 主キー |
-| name       | カテゴリ名 |
+| カラム        | 内容      |
+|------------|---------|
+| id         | 主キー     |
+| name       | カテゴリ名   |
 | color_code | カテゴリカラー |
-| sort_order | 表示順 |
+| sort_order | 表示順     |
 
 ### items
 
@@ -235,47 +255,50 @@ Reactを採用しました。
 パスワードはハッシュ化して保存する予定。
 
 ## ER図
+
 ```mermaid
 erDiagram
-USERS {
-BIGINT id PK
-VARCHAR email
-VARCHAR password_hash
-VARCHAR role
-VARCHAR nickname
-}
+    USERS {
+        BIGINT id PK
+        VARCHAR email
+        VARCHAR password_hash
+        VARCHAR role
+        VARCHAR nickname
+    }
 
-CATEGORIES {
-BIGINT id PK
-VARCHAR name
-VARCHAR color_code
-INT sort_order
-}
+    CATEGORIES {
+        BIGINT id PK
+        VARCHAR name
+        VARCHAR color_code
+        INT sort_order
+    }
 
-ITEMS {
-BIGINT id PK
-VARCHAR name
-BIGINT category_id FK
-INT current_stock
-BOOLEAN alert_enabled
-INT min_stock
-INT sort_order
-}
+    ITEMS {
+        BIGINT id PK
+        VARCHAR name
+        BIGINT category_id FK
+        INT current_stock
+        BOOLEAN alert_enabled
+        INT min_stock
+        INT sort_order
+    }
 
-CATEGORIES ||--o{ ITEMS : "has"
+    CATEGORIES ||--o{ ITEMS: "has"
 ```
 
 ## APIのURL設計
 
-| HTTPメソッド | URL | 処理内容 |
-|---|---|---|
-| GET | `/api/items` | 商品一覧取得 |
-| POST | `/api/items` | 商品登録 |
-| PUT | `/api/items/{id}` | 商品更新 |
-| DELETE | `/api/items/{id}` | 商品削除 |
-| PATCH | `/api/items/{id}/stock` | 在庫数更新 |
-| GET | `/api/categories` | カテゴリ一覧取得 |
-| POST | `/api/categories` | カテゴリ登録 |
+| HTTPメソッド | URL                     | 処理内容     |
+|----------|-------------------------|----------|
+| GET      | `/api/items`            | 商品一覧取得   |
+| POST     | `/api/items`            | 商品登録     |
+| PUT      | `/api/items/{id}`       | 商品更新     |
+| DELETE   | `/api/items/{id}`       | 商品削除     |
+| PATCH    | `/api/items/{id}/stock` | 在庫数更新    |
+| GET      | `/api/categories`       | カテゴリ一覧取得 |
+| POST     | `/api/categories`       | カテゴリ登録   |
+| POST | `/api/auth/login` | ログイン |
+| POST | `/api/auth/register` | ユーザー登録 |
 
 ## 環境構築手順
 
@@ -287,36 +310,47 @@ CATEGORIES ||--o{ ITEMS : "has"
 - Git
 
 ### 1. リポジトリをクローン
+
 ```bash
 git clone https://github.com/jykior/inventory-app.git
 ```
 
 ### 2. データベースを準備
+
 MySQLに `inventory` データベースを作成します。
 
 ```sql
 CREATE DATABASE inventory;
 ```
+
 テーブルは、アプリケーション起動時にJPAがエンティティ定義をもとに自動作成・更新します。
 
 ### 3. バックエンドを起動
+
 バックエンドのディレクトリに移動し、Spring Bootを起動します。
+
 ```bash
 cd inventory-app/backend
 ```
+
 MySQLの接続情報を環境変数に設定します。
+
 ```
 export DB_USERNAME=MySQLのユーザー名
 export DB_PASSWORD=MySQLのパスワード
 ```
+
 その後、Spring Bootを起動します。
+
 ```
 ./gradlew bootRun
 ```
 
 ### 5. フロントエンドを起動
+
 別のターミナルを開き、フロントエンドのディレクトリで依存関係をインストールし,
 開発サーバーを起動します。
+
 ```bash
 cd inventory-app/frontend
 npm install
@@ -327,12 +361,14 @@ npm run dev
 
 - ✅ 商品登録・削除
 - ✅ 商品一覧表示
-- ✅ カテゴリによる絞り込み 
+- ✅ カテゴリによる絞り込み
 - ✅ 在庫数の増減・更新
 - ✅ ログイン機能
 - ✅ ログイン画面作成
 - ✅ Spring Security導入
-- ⬜ ユーザー新規登録機能 
+- ✅ ユーザー新規登録機能
+- ⬜ ロール別権限管理
+- ⬜ ゲストアカウント作成
 - ⬜ 商品・カテゴリの編集
 - ⬜ 商品の並び替え
 - ⬜ 在庫注意画面作成

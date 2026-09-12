@@ -3,6 +3,7 @@ package com.example.backend.controller;
 import com.example.backend.entity.Category;
 import com.example.backend.service.CategoryService;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * 商品カテゴリに関するAPIを提供するコントローラークラス。
@@ -31,7 +33,11 @@ public class CategoryController {
 
   @PostMapping
   public Category createCategory(@RequestBody Category category) {
-    return categoryService.createCategory(category);
+    try {
+      return categoryService.createCategory(category);
+    } catch (IllegalArgumentException e) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT);
+    }
   }
 
   @DeleteMapping("/{id}")

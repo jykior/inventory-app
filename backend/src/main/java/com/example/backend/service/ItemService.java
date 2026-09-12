@@ -21,7 +21,6 @@ public class ItemService {
   }
 
   public Item createItem(Item item) {
-    /*商品名の重複チェック*/
     if (itemRepository.existsByName(item.getName())) {
       throw new IllegalArgumentException();
     }

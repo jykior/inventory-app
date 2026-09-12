@@ -370,7 +370,7 @@ body {
 }
 
 /*商品追加モーダル*/
-.item-modal-overlay {
+.modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
@@ -381,7 +381,7 @@ body {
 }
 
 .item-modal {
-  width: 90%;
+  width: 100%;
   max-width: 500px;
   min-height: 600px;
   background: #fffdf8;
@@ -424,9 +424,7 @@ body {
   color: red;
   margin-left: 3px;
 }
-.item-modal p {
-  font-size: 10px;
-}
+
 .category-select {
   margin-bottom: 18px;
 }
@@ -474,7 +472,7 @@ body {
 
 .form-error {
   color: #d93636;
-  font-size: 14px;
+  font-size: 16px;
   margin: 4px 0 8px;
 }
 .category-add {
@@ -493,7 +491,7 @@ body {
 
 /* カテゴリ追加モーダル */
 .category-modal {
-  width: 90%;
+  width: 100%;
   max-width: 360px;
   background: #fffdf8;
   border-radius: 16px;
@@ -523,7 +521,7 @@ body {
 
 .category-color-list {
   display: flex;
-  gap: 10px;
+  justify-content: space-evenly;
   margin: 8px 0 20px;
 }
 
@@ -795,6 +793,15 @@ body {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.5);
   color: white;
+}
+
+.password-note {
+  width: max-content;
+  margin: -10px 0 10px -30px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #aaa;
+  white-space: nowrap;
 }
 
 .user-register-error {

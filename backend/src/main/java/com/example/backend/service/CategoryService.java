@@ -20,7 +20,6 @@ public class CategoryService {
   }
 
   public Category createCategory(Category category) {
-    /*カテゴリ名の重複チェック*/
     if (categoryRepository.existsByName(category.getName())) {
       throw new IllegalArgumentException();
     }

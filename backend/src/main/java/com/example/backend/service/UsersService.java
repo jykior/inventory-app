@@ -36,7 +36,12 @@ public class UsersService {
   }
 
   public Users register(RegisterRequest request) {
-
+    if (usersRepository.existsByEmail(request.getEmail())) {
+      throw new IllegalArgumentException("EMAIL_ALREADY_EXISTS");
+    }
+    if (!request.getPassword().equals(request.getConfirmPassword())) {
+      throw new IllegalArgumentException("PASSWORD_MISMATCH");
+    }
     Users users = new Users();
 
     users.setEmail(request.getEmail());

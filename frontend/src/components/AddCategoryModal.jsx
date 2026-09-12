@@ -17,7 +17,7 @@ function AddCategoryModal({ onClose, onCategoryCreated }) {
 
   const handleSubmit = async () => {
     if (!name.trim()) {
-      setError("カテゴリ名を入力してください");
+      setError("※カテゴリ名を入力してください※");
       return;
     }
     try {
@@ -25,7 +25,7 @@ function AddCategoryModal({ onClose, onCategoryCreated }) {
       await onCategoryCreated();
       onClose();
     } catch (error) {
-      setError("同じカテゴリ名がすでに登録されています");
+      setError("※同じカテゴリ名がすでに登録されています※");
     }
   };
 
@@ -36,7 +36,9 @@ function AddCategoryModal({ onClose, onCategoryCreated }) {
           <h2>カテゴリを追加</h2>
           <button onClick={onClose}>×</button>
         </div>
+
         {error && <p className="form-error">{error}</p>}
+        
         <label>
           カテゴリ名<span className="required"> *</span>
           <input

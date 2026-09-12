@@ -51,8 +51,6 @@ function App() {
       const data = await getCategories();
       setCategories(data);
     };
-    fetchItems();
-    fetchCategories();
 
     const savedUser = sessionStorage.getItem("user");
 
@@ -60,6 +58,9 @@ function App() {
       const user = JSON.parse(savedUser);
       setUser(user);
       setIsLoggedIn(true);
+
+      fetchItems();
+      fetchCategories();
     }
   }, []);
 
@@ -103,7 +104,7 @@ function App() {
   const alertItems = items.filter(
     (item) => item.current_stock <= item.minStock,
   );
-  
+
   const handleLogin = (user) => {
     setUser(user);
     setIsLoggedIn(true);

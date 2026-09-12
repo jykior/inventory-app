@@ -26,7 +26,7 @@ function Login({ onLogin }) {
       return;
     }
 
-    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#]{6,}$/;
     if (!passwordPattern.test(password)) {
       setError("パスワードは6文字以上の英数字で入力してください");
       return;
@@ -36,8 +36,12 @@ function Login({ onLogin }) {
       const user = await login(email, password);
       onLogin(user);
     } catch (error) {
+      if(error.message === "LOGIN_FAILED"){
       setError("メールアドレスまたはパスワードが正しくありません");
+    }else{
+      setError("ログインに失敗しました");
     }
+  }
   };
 
   return (
