@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.example.backend.dto.Request.LoginRequest;
 import com.example.backend.service.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,7 +44,7 @@ class UsersControllerTest {
 
     when(usersService.login(any(), any())).thenThrow(new BadCredentialsException("Bad credentials"));
 
-    LoginRequest request = new LoginRequest();
+    com.example.backend.dto.Request.LoginRequest request = new LoginRequest();
     request.setEmail("test@example.com");
     request.setPassword("wrongPassword");
 
