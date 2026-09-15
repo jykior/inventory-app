@@ -48,8 +48,34 @@ public class SecurityConfig {
         .securityContext(context -> context.securityContextRepository(securityContextRepository()))
         .authenticationProvider(authenticationProvider)
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/login","/api/auth/register","/error").permitAll()
+            .requestMatchers("/api/auth/login", "/api/auth/register", "/error").permitAll()
             .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+            // 商品操作
+            .requestMatchers(HttpMethod.GET, "/api/items")
+            .hasAnyRole("ADMIN", "MANAGER", "STAFF", "GUEST")
+            .requestMatchers(HttpMethod.POST, "/api/items")
+            .hasAnyRole("ADMIN", "MANAGER", "GUEST")
+            .requestMatchers(HttpMethod.PUT, "/api/items/*")
+            .hasAnyRole("ADMIN", "MANAGER", "GUEST")
+            .requestMatchers(HttpMethod.DELETE, "/api/items/*")
+            .hasAnyRole("ADMIN", "MANAGER", "GUEST")
+
+            // 在庫数操作
+            .requestMatchers(HttpMethod.PATCH, "/api/items/*/stock")
+            .hasAnyRole("ADMIN", "MANAGER", "STAFF", "GUEST")
+
+            // カテゴリ操作
+            .requestMatchers(HttpMethod.GET, "/api/categories")
+            .hasAnyRole("ADMIN", "MANAGER", "STAFF", "GUEST")
+            .requestMatchers(HttpMethod.POST, "/api/categories")
+            .hasAnyRole("ADMIN", "MANAGER", "GUEST")
+            .requestMatchers(HttpMethod.DELETE, "/api/categories/*")
+            .hasAnyRole("ADMIN", "MANAGER", "GUEST")
+
+            // 権限管理
+            .requestMatchers(HttpMethod.PATCH, "/api/auth/*/role")
+            .hasAnyRole("ADMIN")
+
             .anyRequest()
             .authenticated()
         );

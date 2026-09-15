@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { userRegister } from "../api/authApi";
+import { userRegister } from "../../api/authApi";
 
 const UserRegisterModal = ({ onClose }) => {
   const [email, setEmail] = useState("");

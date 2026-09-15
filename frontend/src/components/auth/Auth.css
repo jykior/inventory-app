@@ -1,0 +1,252 @@
+/* ログイン画面 */
+.login-page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("/login.png");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.login-panel {
+  position: relative;
+  z-index: 1;
+  width: 560px;
+  padding: 40px 50px;
+  box-sizing: border-box;
+  background: rgba(20, 20, 20, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 24px;
+  color: white;
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+
+.login-logo h1 {
+  margin: 0;
+  font-size: 42px;
+  letter-spacing: 5px;
+}
+
+.login-logo h2 {
+  margin: 5px 0 20px;
+  font-size: 30px;
+  letter-spacing: 6px;
+}
+
+.login-line {
+  width: 260px;
+  height: 1px;
+  margin: 0 auto 30px;
+  background: rgba(220, 170, 80, 0.8);
+}
+
+.login-panel h3 {
+  margin: 0;
+  font-size: 24px;
+  color: #e5ad55;
+}
+
+.login-message {
+  margin: 15px 0 30px;
+  font-size: 16px;
+}
+
+.login-field,
+.register-field {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.login-field label,
+.register-field label {
+  width: 100px;
+  flex-shrink: 0;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.login-input {
+  display: flex;
+  align-items: center;
+  height: 58px;
+  padding: 0 22px;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 14px;
+  background: rgba(20, 20, 20, 0.4);
+  flex: 1;
+  min-width: 0;
+}
+
+.login-icon {
+  margin-right: 18px;
+  color: #e5ad55;
+  font-size: 26px;
+}
+
+.login-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: white;
+  font-size: 16px;
+}
+
+.login-input input::placeholder {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.login-button {
+  width: 100%;
+  height: 58px;
+  margin-top: 8px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #dba64f;
+  color: #111;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.login-divider span {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.login-divider p {
+  margin: 0;
+  font-size: 17px;
+}
+
+.login-sub-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.user-register-button,
+.guest-button {
+  flex: 1;
+  height: 55px;
+
+  border: 1px solid #dba64f;
+  border-radius: 12px;
+
+  background: transparent;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.user-register-button span,
+.guest-button span {
+  margin-right: 10px;
+  color: #e5ad55;
+}
+
+.login-error {
+  color: red;
+  font-weight: bold;
+}
+
+/* ユーザー登録モーダル */
+.register-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.register-modal {
+  width: 500px;
+  padding: 50px;
+  box-sizing: border-box;
+  background: rgba(20, 20, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  color: white;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.register-modal h2 {
+  margin: 0 0 30px;
+  font-size: 28px;
+  letter-spacing: 3px;
+}
+
+.register-modal input {
+  flex: 1;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: white;
+  font-size: 16px;
+}
+
+.register-modal input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.register-modal button {
+  height: 48px;
+  padding: 0 50px;
+  margin: 10px 25px 0;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.register-modal button:first-of-type {
+  background: #e0aa4f;
+  border: 1px solid #e0aa4f;
+  color: #111;
+}
+
+.register-modal button:last-of-type {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: white;
+}
+
+.password-note {
+  width: max-content;
+  margin: -10px 0 10px -30px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #aaa;
+  white-space: nowrap;
+}
+
+.user-register-error {
+  color: red;
+  font-weight: bold;
+}

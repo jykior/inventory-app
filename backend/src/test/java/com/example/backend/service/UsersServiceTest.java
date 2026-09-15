@@ -6,7 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.example.backend.dto.RegisterRequest;
+import com.example.backend.dto.Request.RegisterRequest;
 import com.example.backend.entity.Users;
 import com.example.backend.repository.UsersRepository;
 import org.junit.jupiter.api.BeforeEach;

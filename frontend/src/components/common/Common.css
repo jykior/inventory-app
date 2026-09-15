@@ -1,0 +1,48 @@
+/*サイドバー*/
+.sidebar h1 {
+  color: #c9a45c;
+  font-size: x-large;
+}
+
+.logo {
+  width: 70%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  min-width: 60px;
+}
+
+.sidebar {
+  width: 15%;
+  min-width: 120px;
+  min-height: 100vh;
+  background: #171717ea;
+  color: white;
+  padding: 30px 20px;
+  box-sizing: border-box;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 60px;
+}
+
+.sidebar button {
+  width: 100%;
+  padding: 14px 12px;
+  border: none;
+  background: transparent;
+  color: white;
+  text-align: left;
+  font-size: clamp(10px, 1.2vw, 20px);
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: 8px;
+}
+
+.sidebar button.active {
+  background: #3a3325;
+  color: #d6b16b;
+}

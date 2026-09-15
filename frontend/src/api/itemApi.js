@@ -22,7 +22,10 @@ export const createItem = async (item) => {
     body: JSON.stringify(item),
   });
   if (!response.ok) {
-    throw new Error();
+    if (response.status === 403) {
+      throw new Error("ITEM_FAILED");
+    }
+    throw new Error("ITEM_REQUEST_FAILED");
   }
   return response.json();
 };
@@ -37,7 +40,10 @@ export const createCategory = async (category) => {
     body: JSON.stringify(category),
   });
   if (!response.ok) {
-    throw new Error();
+    if (response.status === 403) {
+      throw new Error("CATEGORY_FAILED");
+    }
+    throw new Error("CATEGORY_REQUEST_FAILED");
   }
   return response.json();
 };

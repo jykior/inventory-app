@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createItem, getCategories } from "../api/itemApi";
+import { createItem, getCategories } from "../../api/itemApi";
 import AddCategoryModal from "./AddCategoryModal";
 
 function AddItemModal({ onClose, onItemCreated }) {
@@ -38,7 +38,9 @@ function AddItemModal({ onClose, onItemCreated }) {
       await onItemCreated();
       onClose();
     } catch (error) {
-      setError("※同じ商品名がすでに登録されています※");
+      if (error.message === "ITEM_FAILED") {
+        setError("※権限がありません※");
+      } else setError("※同じ商品名がすでに登録されています※");
     }
   };
   const fetchCategories = async () => {
@@ -59,7 +61,7 @@ function AddItemModal({ onClose, onItemCreated }) {
         </div>
 
         {error && <p className="form-error">{error}</p>}
-        
+
         <label>
           商品名<span className="required"> *</span>
           <input

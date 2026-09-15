@@ -1,8 +1,10 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.RegisterRequest;
+import com.example.backend.dto.Request.RegisterRequest;
+import com.example.backend.dto.Response.UserResponse;
 import com.example.backend.entity.Users;
 import com.example.backend.repository.UsersRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,5 +54,27 @@ public class UsersService {
     users.setNickName(request.getNickName());
 
     return usersRepository.save(users);
+  }
+
+  public Users updateRole(Long id, String role) {
+    if (!"ADMIN".equals(role) && !"MANAGER".equals(role) && !"STAFF".equals(role) && !"GUEST".equals(role)) {
+      throw new IllegalArgumentException("FAILED_ROLE");
+    }
+    if ("ADMIN".equals(role) && usersRepository.existsByRole("ADMIN")) {
+      throw new IllegalArgumentException("ADMIN_ALREADY_EXISTS");
+    }
+
+    Users users = usersRepository.findById(id).orElseThrow();
+    users.setRole(role);
+    return usersRepository.save(users);
+  }
+
+  public List<UserResponse> findAll() {
+    return usersRepository.findAll().stream()
+        .map(users -> new UserResponse(
+            users.getId(),
+            users.getNickName(),
+            users.getRole()
+        )).toList();
   }
 }

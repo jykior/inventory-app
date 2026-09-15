@@ -1,4 +1,6 @@
-function Sidebar({ currentPage, setCurrentPage }) {
+import "./Common.css";
+
+function Sidebar({ currentPage, setCurrentPage, user }) {
   return (
     <aside className="sidebar">
       <h1>INVENTORY MANAGER</h1>
@@ -29,6 +31,14 @@ function Sidebar({ currentPage, setCurrentPage }) {
         >
           ⚙ 設定
         </button>
+        {user?.role === "ADMIN" && (
+          <button
+            className={currentPage === "users" ? "active" : ""}
+            onClick={() => setCurrentPage("admin")}
+          >
+            ♙ ユーザー管理
+          </button>
+        )}
       </nav>
     </aside>
   );

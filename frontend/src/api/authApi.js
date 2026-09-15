@@ -41,3 +41,28 @@ export const userRegister = async (
     throw new Error("REGISTER_FAILED");
   }
 };
+
+export const getUsers = async () => {
+  const response = await fetch("http://localhost:8080/api/auth/users", {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("ユーザー一覧の取得に失敗しました");
+  }
+  return await response.json();
+};
+
+export const updateUserRole = async (id, role) => {
+  const response = await fetch(`http://localhost:8080/api/auth/${id}/role`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ role }),
+  });
+
+  if (!response.ok) {
+    throw new Error("権限の変更に失敗しました");
+  }
+};

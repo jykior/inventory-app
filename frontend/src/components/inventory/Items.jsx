@@ -1,4 +1,5 @@
-import { deleteItem } from "../api/itemApi";
+import { deleteItem } from "../../api/itemApi";
+import "./Inventory.css";
 
 function Items({
   item,

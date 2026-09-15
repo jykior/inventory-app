@@ -1,0 +1,39 @@
+.user-table {
+  width: 600px;
+  border-collapse: collapse;
+  margin-top: 30px;
+}
+
+.user-table th,
+.user-table td {
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1px solid #d8c9a8;
+}
+
+.user-table th {
+  font-weight: normal;
+  color: #8f6f2f;
+}
+
+.user-table td {
+  color: #333;
+}
+
+.user-table select {
+  padding: 6px 10px;
+  border: 1px solid #c9b27c;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.message-area{
+  height: 40px;
+}
+
+.message {
+  margin: 0;
+  color: #c62828;
+  font-weight: bold;
+}

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { login } from "../api/authApi";
+import { login } from "../../api/authApi";
 import UserRegisterModal from "./UserRegisterModal";
+import "./Auth.css";
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -36,12 +37,12 @@ function Login({ onLogin }) {
       const user = await login(email, password);
       onLogin(user);
     } catch (error) {
-      if(error.message === "LOGIN_FAILED"){
-      setError("メールアドレスまたはパスワードが正しくありません");
-    }else{
-      setError("ログインに失敗しました");
+      if (error.message === "LOGIN_FAILED") {
+        setError("メールアドレスまたはパスワードが正しくありません");
+      } else {
+        setError("ログインに失敗しました");
+      }
     }
-  }
   };
 
   return (

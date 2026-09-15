@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createCategory } from "../api/itemApi";
+import { createCategory } from "../../api/itemApi";
 
 function AddCategoryModal({ onClose, onCategoryCreated }) {
   const [name, setName] = useState("");
@@ -25,7 +25,9 @@ function AddCategoryModal({ onClose, onCategoryCreated }) {
       await onCategoryCreated();
       onClose();
     } catch (error) {
-      setError("※同じカテゴリ名がすでに登録されています※");
+      if (error.message === "CATEGORY_FAILED") {
+        setError("※権限がありません※");
+      } else setError("※同じカテゴリ名がすでに登録されています※");
     }
   };
 
@@ -38,7 +40,7 @@ function AddCategoryModal({ onClose, onCategoryCreated }) {
         </div>
 
         {error && <p className="form-error">{error}</p>}
-        
+
         <label>
           カテゴリ名<span className="required"> *</span>
           <input

@@ -5,10 +5,12 @@ import {
   getCategories,
   updateStock as updateStockApi,
 } from "./api/itemApi";
-import Items from "./components/Items";
-import ItemModal from "./components/AddItemModal";
-import Sidebar from "./components/Sidebar";
-import Login from "./components/Login";
+import Items from "./components/inventory/Items";
+import ItemFilter from "./components/inventory/ItemFilter";
+import ItemModal from "./components/inventory/AddItemModal";
+import Sidebar from "./components/common/Sidebar";
+import Login from "./components/auth/Login";
+import Admin from "./components/admin/Admin";
 
 const getStockStatus = (stock, alert) => {
   if (stock >= alert + 3) {
@@ -34,6 +36,9 @@ function App() {
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("すべて");
+  const [selectedStatus, setSelectedStatus] = useState("すべて");
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [sortOrder, setSortOrder] = useState("default");
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [stockChange, setStockChange] = useState(0);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
@@ -92,13 +97,36 @@ function App() {
     );
   };
 
-  let displayItems;
-  if (selectedCategory === "すべて") {
-    displayItems = items;
-  } else {
-    displayItems = items.filter(
-      (item) => item.category.name === selectedCategory,
+  let displayItems = [...items];
+
+  // カテゴリ絞り込み
+  if (selectedCategory !== "すべて") {
+    displayItems = displayItems.filter(
+      (item) => item.category?.name === selectedCategory,
     );
+  }
+
+  // 商品名検索
+  if (searchKeyword.trim() !== "") {
+    displayItems = displayItems.filter((item) =>
+      item.name.toLowerCase().includes(searchKeyword.toLowerCase()),
+    );
+  }
+
+  // 状態絞り込み
+  if (selectedStatus !== "すべて") {
+    displayItems = displayItems.filter((item) => {
+      const status = getStockStatus(item.current_stock, item.minStock);
+      return status.status === selectedStatus;
+    });
+  }
+
+  // 在庫数並び替え
+  if (sortOrder === "desc") {
+    displayItems.sort((a, b) => b.current_stock - a.current_stock);
+  }
+  if (sortOrder === "asc") {
+    displayItems.sort((a, b) => a.current_stock - b.current_stock);
   }
 
   const alertItems = items.filter(
@@ -122,7 +150,12 @@ function App() {
 
   return (
     <div className="app">
-      <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <Sidebar
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+        user={user}
+      />
+
       <div className="content-area">
         <header className="app-header">
           <div className="header-user">
@@ -174,32 +207,17 @@ function App() {
                   ＋ 商品を追加
                 </button>
               </div>
-              <div className="filter-area">
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                >
-                  <option value="すべて">すべてのカテゴリー</option>
-
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-
-                <select>
-                  <option value="すべて">すべての状態</option>
-                  <option value="正常">正常</option>
-                  <option value="注意">注意</option>
-                  <option value="危険">危険</option>
-                </select>
-
-                <div className="search-box">
-                  <span>⌕</span>
-                  <input type="text" placeholder="商品名で検索" />
-                </div>
-              </div>
+              <ItemFilter
+                categories={categories}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                selectedStatus={selectedStatus}
+                setSelectedStatus={setSelectedStatus}
+                searchKeyword={searchKeyword}
+                setSearchKeyword={setSearchKeyword}
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+              />
               {/* 商品一覧 */}
               <table className="item-table">
                 <thead>
@@ -260,6 +278,9 @@ function App() {
               </div>
             </>
           )}
+
+          {/*ユーザー管理*/}
+          {currentPage === "admin" && <Admin />}
         </div>
 
         {/* 商品追加モーダル */}
