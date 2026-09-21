@@ -1,0 +1,150 @@
+.alert-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.alert-summary-card {
+  background: white;
+  border: 1px solid #eee8df;
+  border-radius: 10px;
+  padding: 22px 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 100px;
+}
+
+.alert-summary-card > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.alert-summary-number {
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.alert-summary-card > span:last-child {
+  font-size: 18px;
+  margin-top: 45px;
+  margin-left: 35px;
+}
+
+.alert-summary-card:nth-child(1) > div span:first-child,
+.alert-summary-card:nth-child(1) .alert-summary-number {
+  color: #e8942f;
+}
+
+.alert-summary-card:nth-child(2) > div span:first-child,
+.alert-summary-card:nth-child(2) .alert-summary-number {
+  color: #d93636;
+}
+
+.inventory-alert-list {
+  background: white;
+  border: 1px solid #eee8df;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.inventory-alert-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.inventory-alert-list th,
+.inventory-alert-list td {
+  padding: 18px 24px;
+  text-align: center;
+  border-bottom: 1px solid #ddd6c8;
+  white-space: nowrap;
+}
+
+.inventory-alert-list th {
+  background: #eee9df;
+  color: #2a2a2a;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.inventory-alert-list tr {
+  background-color: rgb(255, 240, 237);
+}
+
+.inventory-alert-list th:nth-child(1),
+.inventory-alert-list td:nth-child(1) {
+  width: 5%;
+}
+
+.inventory-alert-list th:nth-child(2),
+.inventory-alert-list td:nth-child(2) {
+  width: 35%;
+}
+
+.inventory-alert-list th:nth-child(3),
+.inventory-alert-list td:nth-child(3) {
+  width: 15%;
+}
+
+.inventory-alert-list th:nth-child(4),
+.inventory-alert-list td:nth-child(4) {
+  width: 15%;
+}
+
+.inventory-alert-list th:nth-child(5),
+.inventory-alert-list td:nth-child(5) {
+  width: 15%;
+}
+
+.inventory-alert-list th:nth-child(6),
+.inventory-alert-list td:nth-child(6) {
+  width: 15%;
+}
+
+.inventory-alert-list td:nth-child(2) {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.inventory-alert-list td:nth-child(3) > span {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.inventory-alert-list td:nth-child(4) > div,
+.inventory-alert-list td:nth-child(5) > div {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.status-dot {
+  margin-right: 8px;
+}
+
+.alert-actions {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.alert-actions button {
+  border: none;
+  background: transparent;
+
+  font-size: 22px;
+
+  cursor: pointer;
+
+  padding: 4px;
+}

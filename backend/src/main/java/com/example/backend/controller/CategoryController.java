@@ -36,12 +36,16 @@ public class CategoryController {
     try {
       return categoryService.createCategory(category);
     } catch (IllegalArgumentException e) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT);
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }
 
   @DeleteMapping("/{id}")
   public void deleteCategory(@PathVariable Long id) {
-    categoryService.deleteCategory(id);
+    try {
+      categoryService.deleteCategory(id);
+    } catch (IllegalArgumentException e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 }

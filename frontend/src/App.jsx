@@ -5,32 +5,17 @@ import {
   getCategories,
   updateStock as updateStockApi,
 } from "./api/itemApi";
+import { guestLogout } from "./api/authApi";
+import { getStockStatus } from "./utils/stockStatus";
 import Items from "./components/inventory/Items";
 import ItemFilter from "./components/inventory/ItemFilter";
 import ItemModal from "./components/inventory/AddItemModal";
 import Sidebar from "./components/common/Sidebar";
 import Login from "./components/auth/Login";
 import Admin from "./components/admin/Admin";
-
-const getStockStatus = (stock, alert) => {
-  if (stock >= alert + 3) {
-    return { status: "正常", alertColor: "#289046" };
-  }
-  if (stock > alert) {
-    return {
-      status: "少ない",
-      alertColor: "#e8942f",
-      alertBackgroundColor: "#fff7ed",
-      stockStatus: "少",
-    };
-  }
-  return {
-    status: "注意",
-    alertColor: "#d93636",
-    alertBackgroundColor: "#fff0ed",
-    stockStatus: "注意",
-  };
-};
+import Home from "./components/home/Home";
+import InventoryAlert from "./components/inventoryAlert/InventoryAlert";
+import Setting from "./components/setting/Setting";
 
 function App() {
   const [items, setItems] = useState([]);
@@ -51,12 +36,13 @@ function App() {
     const data = await getItems();
     setItems(data);
   };
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const data = await getCategories();
-      setCategories(data);
-    };
 
+  const fetchCategories = async () => {
+    const data = await getCategories();
+    setCategories(data);
+  };
+
+  useEffect(() => {
     const savedUser = sessionStorage.getItem("user");
 
     if (savedUser) {
@@ -82,19 +68,38 @@ function App() {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
+  /**
+   * ログイン成功時の処理を行う。
+   *
+   * ユーザー情報をstateとsessionStorageに保存し、
+   * ログイン後に商品・カテゴリ一覧を取得する。
+   */
+  const handleLogin = async (user) => {
+    setUser(user);
+    setIsLoggedIn(true);
+    sessionStorage.setItem("user", JSON.stringify(user));
 
-  const updateStock = async (item, newStock) => {
-    const updatedItem = await updateStockApi(item, newStock);
+    await fetchItems();
+    await fetchCategories();
+  };
 
-    setItems((prevItems) =>
-      prevItems.map((item) => {
-        if (item.id === updatedItem.id) {
-          return updatedItem;
-        } else {
-          return item;
-        }
-      }),
-    );
+  if (!isLoggedIn) {
+    return <Login onLogin={handleLogin} />;
+  }
+  /**
+   * ログアウト処理を行う。
+   *
+   * sessionStorageからユーザー情報を削除し、
+   * ログイン状態をリセットする。
+   */
+  const handleLogout = async () => {
+    if (user?.role === "GUEST") {
+      await guestLogout();
+    }
+
+    sessionStorage.removeItem("user");
+    setUser(null);
+    setIsLoggedIn(false);
   };
 
   let displayItems = [...items];
@@ -129,25 +134,39 @@ function App() {
     displayItems.sort((a, b) => a.current_stock - b.current_stock);
   }
 
-  const alertItems = items.filter(
-    (item) => item.current_stock <= item.minStock,
+  const normalItems = items.filter(
+    (item) =>
+      getStockStatus(item.current_stock, item.minStock).status === "正常",
   );
 
-  const handleLogin = (user) => {
-    setUser(user);
-    setIsLoggedIn(true);
-    sessionStorage.setItem("user", JSON.stringify(user));
-  };
-  if (!isLoggedIn) {
-    return <Login onLogin={handleLogin} />;
-  }
+  const fewItems = items.filter(
+    (item) =>
+      getStockStatus(item.current_stock, item.minStock).status === "少ない",
+  );
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("user");
-    setUser(null);
-    setIsLoggedIn(false);
-  };
+  const alertItems = items.filter(
+    (item) =>
+      getStockStatus(item.current_stock, item.minStock).status === "注意",
+  );
+  /**
+   * 商品の在庫数を更新する。
+   *
+   * 在庫数を更新した後、
+   * 更新された商品だけをitemsのstateに反映する。
+   */
+  const updateStock = async (item, newStock) => {
+    const updatedItem = await updateStockApi(item, newStock);
 
+    setItems((prevItems) =>
+      prevItems.map((item) => {
+        if (item.id === updatedItem.id) {
+          return updatedItem;
+        } else {
+          return item;
+        }
+      }),
+    );
+  };
   return (
     <div className="app">
       <Sidebar
@@ -177,19 +196,22 @@ function App() {
           </div>
         </header>
         <div className="main-area">
-          {/*ホーム画面*/}
+          {/*HOME画面*/}
           {currentPage === "home" && (
-            <>
-              <div>
-                <h1>ホーム</h1>
-                <p>在庫の全体状況を確認できます。</p>
-              </div>
-            </>
+            <Home
+              items={items}
+              normalItems={normalItems}
+              fewItems={fewItems}
+              alertItems={alertItems}
+              getStockStatus={getStockStatus}
+              setCurrentPage={setCurrentPage}
+            />
           )}
 
           {/* 商品一覧画面 */}
           {currentPage === "items" && (
             <>
+              {/* 在庫注意簡易表示 */}
               {alertItems.length > 0 && (
                 <div className="alert-box">
                   <span>⚠️ 在庫注意</span>
@@ -198,88 +220,45 @@ function App() {
                   </span>
                 </div>
               )}
-              <div className="items-header">
-                <h1>商品一覧</h1>
-                <button
-                  className="item-add-button"
-                  onClick={() => setIsItemModalOpen(true)}
-                >
-                  ＋ 商品を追加
-                </button>
-              </div>
-              <ItemFilter
-                categories={categories}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                selectedStatus={selectedStatus}
-                setSelectedStatus={setSelectedStatus}
-                searchKeyword={searchKeyword}
-                setSearchKeyword={setSearchKeyword}
-                sortOrder={sortOrder}
-                setSortOrder={setSortOrder}
-              />
+
               {/* 商品一覧 */}
-              <table className="item-table">
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>商品名</th>
-                    <th>カテゴリ</th>
-                    <th>現在の在庫</th>
-                    <th>状態</th>
-                    <th>操作</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {displayItems.map((item) => (
-                    <Items
-                      key={item.id}
-                      item={item}
-                      alertColor={
-                        getStockStatus(item.current_stock, item.minStock)
-                          .alertColor
-                      }
-                      alertBackgroundColor={
-                        getStockStatus(item.current_stock, item.minStock)
-                          .alertBackgroundColor
-                      }
-                      stockStatus={
-                        getStockStatus(item.current_stock, item.minStock)
-                          .stockStatus
-                      }
-                      selectedItemId={selectedItemId}
-                      setSelectedItemId={setSelectedItemId}
-                      stockChange={stockChange}
-                      setStockChange={setStockChange}
-                      updateStock={updateStock}
-                      onItemDeleted={fetchItems}
-                    />
-                  ))}
-                </tbody>
-              </table>
+              <Items
+                displayItems={displayItems}
+                selectedItemId={selectedItemId}
+                setSelectedItemId={setSelectedItemId}
+                stockChange={stockChange}
+                setStockChange={setStockChange}
+                updateStock={updateStock}
+                onItemDeleted={fetchItems}
+                getStockStatus={getStockStatus}
+                setIsItemModalOpen={setIsItemModalOpen}
+                itemFilter={
+                  <ItemFilter
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    selectedStatus={selectedStatus}
+                    setSelectedStatus={setSelectedStatus}
+                    searchKeyword={searchKeyword}
+                    setSearchKeyword={setSearchKeyword}
+                    sortOrder={sortOrder}
+                    setSortOrder={setSortOrder}
+                  />
+                }
+              />
             </>
           )}
-
           {/*在庫注意画面*/}
-          {currentPage === "alerts" && (
-            <>
-              <div>
-                <h1>在庫注意</h1>
-              </div>
-            </>
+          {currentPage === "inventoryAlert" && (
+            <InventoryAlert
+              alertItems={alertItems}
+              fewItems={fewItems}
+              getStockStatus={getStockStatus}
+            />
           )}
 
-          {/*設定画面*/}
-          {currentPage === "setting" && (
-            <>
-              <div>
-                <h1>設定</h1>
-              </div>
-            </>
-          )}
+          {currentPage === "setting" && <Setting />}
 
-          {/*ユーザー管理*/}
           {currentPage === "admin" && <Admin />}
         </div>
 

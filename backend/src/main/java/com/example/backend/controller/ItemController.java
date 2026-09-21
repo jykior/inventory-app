@@ -37,22 +37,37 @@ public class ItemController {
     try {
       return itemService.createItem(item);
     } catch (IllegalArgumentException e) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT);
+      if ("ITEM_NAME_ALREADY_EXISTS".equals(e.getMessage())) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT);
+      }
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }
 
   @DeleteMapping("/{id}")
   public void deleteItem(@PathVariable Long id) {
-    itemService.deleteItem(id);
+    try {
+      itemService.deleteItem(id);
+    } catch (IllegalArgumentException e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @PutMapping("/{id}")
   public Item updateItem(@PathVariable Long id, @RequestBody Item item) {
-    return itemService.updateItem(id, item);
+    try {
+      return itemService.updateItem(id, item);
+    } catch (IllegalArgumentException e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @PatchMapping("/{id}/stock")
   public Item updateStock(@PathVariable Long id, @RequestBody Map<String, Integer> request) {
-    return itemService.updateStock(id, request.get("current_stock"));
+    try {
+      return itemService.updateStock(id, request.get("current_stock"));
+    } catch (IllegalArgumentException e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
   }
 }

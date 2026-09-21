@@ -209,7 +209,7 @@ Spring Bootのエラー処理で使用される/errorがSpring Securityの認証
 
 #### デプロイ
 
-バックエンドをRender、フロントエンドをNetlifyへデプロイ予定です。
+バックエンドをAWS EC2、フロントエンドをNetlifyへデプロイ予定です。
 
 ## 🔵DB設計
 
@@ -231,6 +231,8 @@ Spring Bootのエラー処理で使用される/errorがSpring Securityの認証
 | name       | カテゴリ名   |
 | color_code | カテゴリカラー |
 | sort_order | 表示順     |
+| is_demo  | デモデータかどうか |
+| guest_id | ゲストユーザーID |
 
 ### items
 
@@ -243,16 +245,13 @@ Spring Bootのエラー処理で使用される/errorがSpring Securityの認証
 | alert_enabled | アラートON/OFF |
 | min_stock     | アラート基準値    |
 | sort_order    | 商品の並び順     |
-
-###### ※ユーザー設計について
-
-現在は単一店舗での利用を想定しているため、
-商品・カテゴリとユーザーの直接的な関連付けは行っていません。
+| is_demo  | デモデータかどうか |
+| guest_id | ゲストユーザーID |
 
 ## 認証方式
 
-セッション認証を使用してログイン状態を管理する予定。
-パスワードはハッシュ化して保存する予定。
+セッション認証を使用してログイン状態を管理します。
+パスワードはハッシュ化して保存します。
 
 ## 🟡ER図
 
@@ -271,6 +270,8 @@ erDiagram
         VARCHAR name
         VARCHAR color_code
         INT sort_order
+        BOOLEAN is_demo
+        BIGINT guest_id FK
     }
 
     ITEMS {
@@ -281,10 +282,18 @@ erDiagram
         BOOLEAN alert_enabled
         INT min_stock
         INT sort_order
+        BOOLEAN is_demo
+        BIGINT guest_id FK
     }
 
     CATEGORIES ||--o{ ITEMS: "has"
 ```
+###### ※ユーザー設計について
+
+単一店舗での利用を想定しているため、通常の商品・カテゴリは店舗内で共有して管理します。
+
+一方、Web上でのデモ利用では複数ユーザーが同時に利用する可能性を考慮し、
+実データをコピーしたデモデータをゲストユーザーごとに分離する機能を実装予定です。
 
 ## 🟢APIのURL設計
 
@@ -367,12 +376,13 @@ npm run dev
 - ✅ ログイン画面作成
 - ✅ Spring Security導入
 - ✅ ユーザー新規登録機能
-- ⬜ ロール別権限管理
-- ⬜ ゲストアカウント作成
+- ✅ ロール別権限管理
+- ✅ ゲストアカウント作成
 - ⬜ 商品・カテゴリの編集
 - ⬜ 商品の並び替え
 - ⬜ 在庫注意画面作成
 - ⬜ 在庫注意商品の表示
 - ⬜ ホーム画面作成
+- ⬜ ゲストログインの複数人対応
 - ⬜ AWS RDSへの移行
 - ⬜ デプロイ・公開

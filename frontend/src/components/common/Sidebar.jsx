@@ -20,8 +20,8 @@ function Sidebar({ currentPage, setCurrentPage, user }) {
           ▣ 商品一覧
         </button>
         <button
-          className={currentPage === "alerts" ? "active" : ""}
-          onClick={() => setCurrentPage("alerts")}
+          className={currentPage === "inventoryAlert" ? "active" : ""}
+          onClick={() => setCurrentPage("inventoryAlert")}
         >
           ⚠ 在庫注意
         </button>

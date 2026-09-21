@@ -1,3 +1,4 @@
+
 function ItemFilter({
   categories,
   selectedCategory,
@@ -11,7 +12,6 @@ function ItemFilter({
 }) {
   return (
     <div className="filter-area">
-      {/* カテゴリ */}
       <select
         value={selectedCategory}
         onChange={(e) => setSelectedCategory(e.target.value)}
@@ -25,7 +25,6 @@ function ItemFilter({
         ))}
       </select>
 
-      {/* 状態 */}
       <select
         value={selectedStatus}
         onChange={(e) => setSelectedStatus(e.target.value)}
@@ -36,7 +35,6 @@ function ItemFilter({
         <option value="注意">注意</option>
       </select>
 
-      {/* 並び替え */}
       <select
         value={sortOrder}
         onChange={(e) => setSortOrder(e.target.value)}
@@ -46,7 +44,6 @@ function ItemFilter({
         <option value="asc">在庫が少ない順</option>
       </select>
 
-      {/* 商品名検索 */}
       <div className="search-box">
         <span>⌕</span>
 

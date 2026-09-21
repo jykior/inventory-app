@@ -1,10 +1,10 @@
 package com.example.backend.controller;
 
-import com.example.backend.dto.Request.LoginRequest;
-import com.example.backend.dto.Request.RegisterRequest;
-import com.example.backend.dto.Request.RoleRequest;
-import com.example.backend.dto.Response.RegisterResponse;
-import com.example.backend.dto.Response.UserResponse;
+import com.example.backend.dto.request.LoginRequest;
+import com.example.backend.dto.request.RegisterRequest;
+import com.example.backend.dto.request.RoleRequest;
+import com.example.backend.dto.response.RegisterResponse;
+import com.example.backend.dto.response.UserResponse;
 import com.example.backend.entity.Users;
 import com.example.backend.service.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,9 +51,7 @@ public class UsersController {
       );
 
       SecurityContext context = SecurityContextHolder.createEmptyContext();
-
       context.setAuthentication(authentication);
-
       SecurityContextHolder.setContext(context);
 
       securityContextRepository.saveContext(
@@ -87,9 +85,6 @@ public class UsersController {
       if ("EMAIL_ALREADY_EXISTS".equals(e.getMessage())) {
         throw new ResponseStatusException(HttpStatus.CONFLICT);
       }
-      if ("PASSWORD_MISMATCH".equals(e.getMessage())) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-      }
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }
@@ -99,9 +94,10 @@ public class UsersController {
     try {
       usersService.updateRole(id, request.getRole());
     } catch (IllegalArgumentException e) {
-      if ("FAILED_ROLE".equals(e.getMessage()) || "ADMIN_ALREADY_EXISTS".equals(e.getMessage())) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+      if ("ADMIN_ALREADY_EXISTS".equals(e.getMessage())) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT);
       }
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
   }
 

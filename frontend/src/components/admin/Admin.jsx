@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 import { getUsers, updateUserRole } from "../../api/authApi";
 import "./Admin.css";
+
 function Admin() {
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState("");
-
+/**
+ * ユーザーの権限を変更する。
+ *
+ * 権限を更新した後、
+ * usersのstateに変更内容を反映する。
+ */
   const handleRoleChange = async (id, role) => {
     try {
       await updateUserRole(id, role);
@@ -17,6 +23,7 @@ function Admin() {
       setMessage("権限の変更に失敗しました");
     }
   };
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -58,7 +65,6 @@ function Admin() {
                   >
                     <option value="MANAGER">MANAGER</option>
                     <option value="STAFF">STAFF</option>
-                    <option value="GUEST">GUEST</option>
                   </select>
                 )}
               </td>

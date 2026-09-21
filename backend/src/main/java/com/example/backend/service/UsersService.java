@@ -1,7 +1,7 @@
 package com.example.backend.service;
 
-import com.example.backend.dto.Request.RegisterRequest;
-import com.example.backend.dto.Response.UserResponse;
+import com.example.backend.dto.request.RegisterRequest;
+import com.example.backend.dto.response.UserResponse;
 import com.example.backend.entity.Users;
 import com.example.backend.repository.UsersRepository;
 import java.util.List;
@@ -42,7 +42,7 @@ public class UsersService {
       throw new IllegalArgumentException("EMAIL_ALREADY_EXISTS");
     }
     if (!request.getPassword().equals(request.getConfirmPassword())) {
-      throw new IllegalArgumentException("PASSWORD_MISMATCH");
+      throw new IllegalArgumentException();
     }
     Users users = new Users();
 
@@ -56,17 +56,19 @@ public class UsersService {
     return usersRepository.save(users);
   }
 
-  public Users updateRole(Long id, String role) {
-    if (!"ADMIN".equals(role) && !"MANAGER".equals(role) && !"STAFF".equals(role) && !"GUEST".equals(role)) {
-      throw new IllegalArgumentException("FAILED_ROLE");
-    }
+  public void updateRole(Long id, String role) {
     if ("ADMIN".equals(role) && usersRepository.existsByRole("ADMIN")) {
       throw new IllegalArgumentException("ADMIN_ALREADY_EXISTS");
     }
+    if (!"ADMIN".equals(role) && !"MANAGER".equals(role) && !"STAFF".equals(role) && !"GUEST".equals(role)) {
+      throw new IllegalArgumentException();
+    }
 
     Users users = usersRepository.findById(id).orElseThrow();
+
     users.setRole(role);
-    return usersRepository.save(users);
+
+    usersRepository.save(users);
   }
 
   public List<UserResponse> findAll() {

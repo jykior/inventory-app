@@ -14,7 +14,12 @@ function AddCategoryModal({ onClose, onCategoryCreated }) {
     "rgba(218, 133, 212,0.5)",
     "rgba(237, 127, 18,0.5)",
   ];
-
+/**
+ * カテゴリを登録する。
+ *
+ * 入力内容をチェックし、
+ * カテゴリを作成した後に一覧を更新する。
+ */
   const handleSubmit = async () => {
     if (!name.trim()) {
       setError("※カテゴリ名を入力してください※");

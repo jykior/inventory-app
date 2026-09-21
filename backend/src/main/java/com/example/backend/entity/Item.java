@@ -25,7 +25,7 @@ public class Item {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(unique = true)
+  @Column
   private String name;
 
   @ManyToOne
@@ -39,4 +39,8 @@ public class Item {
   private Integer minStock;
 
   private Integer sortOrder;
+
+  private Boolean isDemo = false;
+
+  private Long guestId;
 }

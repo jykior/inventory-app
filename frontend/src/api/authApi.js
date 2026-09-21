@@ -18,6 +18,30 @@ export const login = async (email, password) => {
   return await response.json();
 };
 
+export const guestLogin = async () => {
+  const response = await fetch("http://localhost:8080/api/guest/login", {
+    method: "POST",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error("GUEST_LOGIN_FAILED");
+  }
+
+  return await response.json();
+};
+
+export const guestLogout = async () => {
+  const response = await fetch("http://localhost:8080/api/guest/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error("GUEST_LOGOUT_FAILED");
+  }
+};
+
 export const userRegister = async (
   email,
   password,

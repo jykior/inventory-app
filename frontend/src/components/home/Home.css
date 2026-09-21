@@ -1,0 +1,130 @@
+.home-summary {
+  display: flex;
+  gap: 20px;
+}
+
+.home-summary > div {
+  flex: 1;
+  padding: 25px;
+  background: white;
+  border-radius: 10px;
+}
+
+.summary-card {
+  flex: 1;
+  min-height: 120px;
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #eee8df;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.icon {
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 28px;
+  font-weight: 500;
+  transform: translateX(-30px);
+  background: color-mix(in srgb, currentColor 10%, white);
+  border: 1px solid color-mix(in srgb, currentColor 25%, white);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.summary-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.summary-text p {
+  font-size: 17px;
+  font-weight: bold;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 15%;
+  background: color-mix(in srgb, currentColor 10%, white);
+  border: 1px solid color-mix(in srgb, currentColor 25%, white);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.summary-number {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.summary-number h2 {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 500;
+}
+
+.summary-number span {
+  font-size: 18px;
+}
+
+.home-stock-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.home-alert,
+.home-few {
+  margin-top: 30px;
+  padding: 30px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e8e2d8;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.home-alert h2,
+.home-few h2 {
+  margin: 0 0 20px;
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.alert-item,
+.few-item {
+  display: grid;
+  grid-template-columns: 0.2fr 1.5fr 1.5fr 1fr 1fr;
+  align-items: center;
+  padding: 20px 5px;
+  border-bottom: 1px solid #eee;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+.alert-list-button,
+.few-list-button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  background: white;
+  border: 1px solid #c9b79c;
+  border-radius: 6px;
+  color: #5a4a36;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.alert-list-button:hover,
+.few-list-button:hover {
+  background: #f7f3ec;
+}

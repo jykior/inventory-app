@@ -21,8 +21,12 @@ public class Category {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(unique = true)
+  @Column
   private String name;
 
   private String colorCode;
+
+  private Boolean isDemo = false;
+
+  private Long guestId;
 }

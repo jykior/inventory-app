@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login } from "../../api/authApi";
+import { login, guestLogin } from "../../api/authApi";
 import UserRegisterModal from "./UserRegisterModal";
 import "./Auth.css";
 
@@ -8,7 +8,12 @@ function Login({ onLogin }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showUserRegister, setShowUserRegister] = useState(false);
-
+/**
+ * ログイン処理を行う。
+ *
+ * 入力内容をチェックし、
+ * ログインした後にログイン情報をApp.jsxへ渡す。
+ */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -42,6 +47,20 @@ function Login({ onLogin }) {
       } else {
         setError("ログインに失敗しました");
       }
+    }
+  };
+/**
+ * ゲストログインを行う。
+ *
+ * ゲストログインした後にゲストログイン情報をApp.jsxへ渡す。
+ */
+  const handleGuestLogin = async () => {
+    setError("");
+    try {
+      const user = await guestLogin();
+      onLogin(user);
+    } catch (error) {
+      setError("ゲストログインに失敗しました");
     }
   };
 
@@ -112,7 +131,11 @@ function Login({ onLogin }) {
             新規登録
           </button>
 
-          <button type="button" className="guest-button" onClick={onLogin}>
+          <button
+            type="button"
+            className="guest-button"
+            onClick={handleGuestLogin}
+          >
             <span>♙</span>
             ゲストログイン
           </button>

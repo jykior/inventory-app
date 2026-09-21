@@ -1,9 +1,13 @@
 package com.example.backend.service;
 
 import com.example.backend.entity.Category;
+import com.example.backend.guest.GuestService;
 import com.example.backend.repository.CategoryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,19 +18,58 @@ import org.springframework.stereotype.Service;
 public class CategoryService {
 
   private final CategoryRepository categoryRepository;
+  private final GuestService guestService;
+
+  private boolean isGuest() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    if (authentication == null) {
+      return false;
+    }
+    for (GrantedAuthority authority : authentication.getAuthorities()) {
+      if ("ROLE_GUEST".equals(authority.getAuthority())) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   public List<Category> findAll() {
-    return categoryRepository.findAll();
+    boolean isDemo = isGuest();
+    Long guestId = null;
+
+    if (isDemo) {
+      guestId = guestService.getCurrentGuestId();
+    }
+    return categoryRepository.findAllByIsDemoAndGuestId(isDemo,guestId);
   }
 
   public Category createCategory(Category category) {
-    if (categoryRepository.existsByName(category.getName())) {
+    boolean isDemo = isGuest();
+    Long guestId = null;
+
+    if (isDemo) {
+      guestId = guestService.getCurrentGuestId();
+    }
+    if (categoryRepository.existsByNameAndIsDemoAndGuestId(category.getName(), isDemo,guestId)) {
       throw new IllegalArgumentException();
     }
+    category.setIsDemo(isDemo);
+    category.setGuestId(guestId);
+
     return categoryRepository.save(category);
   }
 
   public void deleteCategory(Long id) {
-    categoryRepository.deleteById(id);
+    boolean isDemo = isGuest();
+    Long guestId = null;
+
+    if (isDemo) {
+      guestId = guestService.getCurrentGuestId();
+    }
+    Category category = categoryRepository.findByIdAndIsDemoAndGuestId(id, isDemo,guestId)
+        .orElseThrow(IllegalArgumentException::new);
+
+    categoryRepository.delete(category);
   }
 }

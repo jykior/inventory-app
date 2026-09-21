@@ -7,7 +7,12 @@ const UserRegisterModal = ({ onClose }) => {
   const [nickName, setNickName] = useState("");
   const [error, setError] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+/**
+ * ユーザー登録を行う。
+ *
+ * 入力内容をチェックし、
+ * ユーザーを登録した後にモーダルを閉じる。
+ */
   const handleRegister = async () => {
     if (!nickName || !email || !password || !confirmPassword) {
       setError("未入力の項目があります");

@@ -12,7 +12,12 @@ function AddItemModal({ onClose, onItemCreated }) {
   const [error, setError] = useState("");
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState("");
-
+/**
+ * 商品を登録する。
+ *
+ * 入力内容をチェックし、
+ * 商品を作成した後に商品一覧を更新する。
+ */
   const handleSubmit = async () => {
     setError("");
 

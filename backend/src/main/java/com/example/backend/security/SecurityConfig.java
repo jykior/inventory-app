@@ -48,7 +48,7 @@ public class SecurityConfig {
         .securityContext(context -> context.securityContextRepository(securityContextRepository()))
         .authenticationProvider(authenticationProvider)
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/login", "/api/auth/register", "/error").permitAll()
+            .requestMatchers("/api/auth/login", "/api/auth/register", "/api/guest/login", "/error").permitAll()
             .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
             // 商品操作
             .requestMatchers(HttpMethod.GET, "/api/items")
