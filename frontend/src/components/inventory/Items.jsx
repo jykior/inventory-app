@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { deleteItem } from "../../api/itemApi";
 import { Package } from "lucide-react";
 import "./Inventory.css";
@@ -19,6 +20,15 @@ function Items({
   itemFilter,
 }) {
   const [isDeleteItemModalOpen, setIsDeleteItemModalOpen] = useState(false);
+
+  const handleDeleteItem = async () => {
+    await deleteItem(selectedItemId);
+    await onItemDeleted();
+
+    setSelectedItemId(null);
+    setIsDeleteItemModalOpen(false);
+  };
+
   return (
     <>
       <div className="items-header">
@@ -152,8 +162,8 @@ function Items({
                       className="item-delete"
                       onClick={async (e) => {
                         e.stopPropagation();
-                        await deleteItem(item.id);
-                        await onItemDeleted();
+                        setSelectedItemId(item.id);
+                        setIsDeleteItemModalOpen(true);
                       }}
                     >
                       🗑
@@ -165,6 +175,26 @@ function Items({
           })}
         </tbody>
       </table>
+      {isDeleteItemModalOpen && (
+        <div className="modal-overlay">
+          <div className="delete-modal">
+            <h3>この商品を削除しますか？</h3>
+
+            <div className="delete-modal-buttons">
+              <button onClick={() => setIsDeleteItemModalOpen(false)}>
+                キャンセル
+              </button>
+
+              <button
+                className="delete-confirm-button"
+                onClick={handleDeleteItem}
+              >
+                削除する
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -420,3 +420,41 @@
 .category-modal input:focus {
   border-color: #c9a45c;
 }
+
+.delete-modal {
+  width: 350px;
+  padding: 30px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.delete-modal p {
+  margin: 0 0 25px;
+  font-size: 18px;
+}
+
+.delete-modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.delete-modal-buttons button {
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid #c79a45;
+  background: #fff;
+  color: #b07d18;
+  cursor: pointer;
+}
+
+.delete-confirm-button {
+  border: 1px solid #c62828 !important;
+  color: #c62828 !important;
+}
+
+.delete-confirm-button:hover {
+  background: #fff0ed !important;
+}
