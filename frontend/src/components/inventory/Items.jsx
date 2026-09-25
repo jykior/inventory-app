@@ -18,6 +18,7 @@ function Items({
   setIsItemModalOpen,
   itemFilter,
 }) {
+  const [isDeleteItemModalOpen, setIsDeleteItemModalOpen] = useState(false);
   return (
     <>
       <div className="items-header">

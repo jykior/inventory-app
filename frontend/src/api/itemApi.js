@@ -1,19 +1,21 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const getItems = async () => {
-  const response = await fetch("http://localhost:8080/api/items", {
+  const response = await fetch(`${API_URL}/api/items`, {
     credentials: "include",
   });
   return response.json();
 };
 
 export const getCategories = async () => {
-  const response = await fetch("http://localhost:8080/api/categories", {
+  const response = await fetch(`${API_URL}/api/categories`, {
     credentials: "include",
   });
   return response.json();
 };
 
 export const createItem = async (item) => {
-  const response = await fetch("http://localhost:8080/api/items", {
+  const response = await fetch(`${API_URL}/api/items`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -31,7 +33,7 @@ export const createItem = async (item) => {
 };
 
 export const createCategory = async (category) => {
-  const response = await fetch("http://localhost:8080/api/categories", {
+  const response = await fetch(`${API_URL}/api/categories`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -49,25 +51,22 @@ export const createCategory = async (category) => {
 };
 
 export const updateStock = async (item, newStock) => {
-  const response = await fetch(
-    `http://localhost:8080/api/items/${item.id}/stock`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        current_stock: newStock,
-      }),
+  const response = await fetch(`${API_URL}/api/items/${item.id}/stock`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    credentials: "include",
+    body: JSON.stringify({
+      current_stock: newStock,
+    }),
+  });
 
   return response.json();
 };
 
 export const deleteItem = async (id) => {
-  const response = await fetch(`http://localhost:8080/api/items/${id}`, {
+  const response = await fetch(`${API_URL}/api/items/${id}`, {
     method: "DELETE",
     credentials: "include",
   });

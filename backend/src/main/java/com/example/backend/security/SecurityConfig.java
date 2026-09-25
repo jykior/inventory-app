@@ -1,5 +1,6 @@
 package com.example.backend.security;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * Spring Securityの認証・認可に関する設定を行うクラス。
@@ -51,16 +55,16 @@ public class SecurityConfig {
             .requestMatchers("/api/auth/login", "/api/auth/register", "/api/guest/login", "/error").permitAll()
             .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
             // 商品・カテゴリ操作
-            .requestMatchers(HttpMethod.GET, "/api/items","/api/categories")
+            .requestMatchers(HttpMethod.GET, "/api/items", "/api/categories")
             .hasAnyRole("ADMIN", "MANAGER", "STAFF", "GUEST")
 
-            .requestMatchers(HttpMethod.POST, "/api/items","/api/categories")
+            .requestMatchers(HttpMethod.POST, "/api/items", "/api/categories")
             .hasAnyRole("ADMIN", "MANAGER", "GUEST")
 
             .requestMatchers(HttpMethod.PUT, "/api/items/*")
             .hasAnyRole("ADMIN", "MANAGER", "GUEST")
 
-            .requestMatchers(HttpMethod.DELETE, "/api/items/*","/api/categories/*")
+            .requestMatchers(HttpMethod.DELETE, "/api/items/*", "/api/categories/*")
             .hasAnyRole("ADMIN", "MANAGER", "GUEST")
 
             // 在庫数操作
@@ -84,5 +88,24 @@ public class SecurityConfig {
   @Bean
   public SecurityContextRepository securityContextRepository() {
     return new HttpSessionSecurityContextRepository();
+  }
+
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+
+    configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+
+    configuration.setAllowedHeaders(List.of("*"));
+
+    configuration.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
   }
 }

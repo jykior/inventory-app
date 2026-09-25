@@ -1,5 +1,7 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const login = async (email, password) => {
-  const response = await fetch("http://localhost:8080/api/auth/login", {
+  const response = await fetch(`${API_URL}/api/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -18,7 +20,7 @@ export const login = async (email, password) => {
 };
 
 export const guestLogin = async () => {
-  const response = await fetch("http://localhost:8080/api/guest/login", {
+  const response = await fetch(`${API_URL}/api/guest/login`, {
     method: "POST",
     credentials: "include",
   });
@@ -31,7 +33,7 @@ export const guestLogin = async () => {
 };
 
 export const guestLogout = async () => {
-  const response = await fetch("http://localhost:8080/api/guest/logout", {
+  const response = await fetch(`${API_URL}/api/guest/logout`, {
     method: "POST",
     credentials: "include",
   });
@@ -47,7 +49,7 @@ export const userRegister = async (
   confirmPassword,
   nickName,
 ) => {
-  const response = await fetch("http://localhost:8080/api/auth/register", {
+  const response = await fetch(`${API_URL}/api/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -66,7 +68,7 @@ export const userRegister = async (
 };
 
 export const getUsers = async () => {
-  const response = await fetch("http://localhost:8080/api/auth/users", {
+  const response = await fetch(`${API_URL}/api/auth/users`, {
     credentials: "include",
   });
   if (!response.ok) {
@@ -76,7 +78,7 @@ export const getUsers = async () => {
 };
 
 export const updateUserRole = async (id, role) => {
-  const response = await fetch(`http://localhost:8080/api/auth/${id}/role`, {
+  const response = await fetch(`${API_URL}/api/auth/${id}/role`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -91,7 +93,7 @@ export const updateUserRole = async (id, role) => {
 };
 
 export const updateEmail = async (email) => {
-  const response = await fetch(`http://localhost:8080/api/auth/email`, {
+  const response = await fetch(`${API_URL}/api/auth/email`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -109,7 +111,7 @@ export const updateEmail = async (email) => {
 };
 
 export const updatePassword = async (password) => {
-  const response = await fetch(`http://localhost:8080/api/auth/password`, {
+  const response = await fetch(`${API_URL}/api/auth/password`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -126,7 +128,7 @@ export const updatePassword = async (password) => {
 };
 
 export const deleteAccount = async () => {
-  const response = await fetch(`http://localhost:8080/api/auth`, {
+  const response = await fetch(`${API_URL}/api/auth`, {
     method: "DELETE",
     credentials: "include",
   });
