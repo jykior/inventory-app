@@ -1,47 +1,49 @@
 import { useState } from "react";
 import { userRegister } from "../../api/authApi";
+import { Mail, KeyRound, User, BadgeCheck } from "lucide-react";
 
-const UserRegisterModal = ({ onClose }) => {
+const UserRegisterModal = ({ onClose, onRegisterSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickName, setNickName] = useState("");
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-/**
- * ユーザー登録を行う。
- *
- * 入力内容をチェックし、
- * ユーザーを登録した後にモーダルを閉じる。
- */
+  /**
+   * ユーザー登録を行う。
+   *
+   * 入力内容をチェックし、
+   * ユーザーを登録した後にモーダルを閉じる。
+   */
   const handleRegister = async () => {
     if (!nickName || !email || !password || !confirmPassword) {
-      setError("未入力の項目があります");
+      setMessage("未入力の項目があります");
       return;
     }
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(email)) {
-      setError("正しいメールアドレスを入力してください");
+      setMessage("正しいメールアドレスを入力してください");
       return;
     }
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#]{6,}$/;
     if (!passwordPattern.test(password)) {
-      setError("パスワードは6文字以上の英数字で入力してください");
+      setMessage("パスワードは6文字以上の英数字で入力してください");
       return;
     }
     if (password !== confirmPassword) {
-      setError("パスワードが一致しません");
+      setMessage("パスワードが一致しません");
       return;
     }
     try {
       await userRegister(email, password, confirmPassword, nickName);
+      onRegisterSuccess();
       onClose();
     } catch (error) {
       if (error.message === "EMAIL_ALREADY_EXISTS") {
-        setError("このメールアドレスはすでに登録されています");
+        setMessage("このメールアドレスはすでに登録されています");
       } else if (error.message === "PASSWORD_MISMATCH") {
-        setError("パスワードが一致しません");
+        setMessage("パスワードが一致しません");
       } else {
-        setError("ユーザー登録に失敗しました");
+        setMessage("ユーザー登録に失敗しました");
       }
     }
   };
@@ -55,7 +57,9 @@ const UserRegisterModal = ({ onClose }) => {
             <span className="required"> *</span>
           </label>
           <div className="login-input">
-            <span className="login-icon">✉</span>
+            <span className="login-icon">
+              <Mail size={24} />
+            </span>
             <input
               type="email"
               placeholder="メールアドレス"
@@ -70,7 +74,9 @@ const UserRegisterModal = ({ onClose }) => {
             <span className="required"> *</span>
           </label>
           <div className="login-input">
-            <span className="login-icon">🗝</span>
+            <span className="login-icon">
+              <KeyRound size={24} />
+            </span>
             <input
               type="password"
               placeholder="6文字以上の英数字で入力"
@@ -92,7 +98,9 @@ const UserRegisterModal = ({ onClose }) => {
             <span className="required"> *</span>
           </label>
           <div className="login-input">
-            <span className="login-icon">🗝</span>
+            <span className="login-icon">
+              <BadgeCheck size={24} />
+            </span>
             <input
               type="password"
               placeholder="もう一度パスワードを入力"
@@ -107,7 +115,9 @@ const UserRegisterModal = ({ onClose }) => {
             <span className="required"> *</span>
           </label>
           <div className="login-input">
-            <span className="login-icon">♙</span>
+            <span className="login-icon">
+              <User size={24} />
+            </span>
             <input
               type="text"
               placeholder="ニックネーム"
@@ -117,10 +127,17 @@ const UserRegisterModal = ({ onClose }) => {
           </div>
         </div>
 
-        {error && <p className="user-register-error">{error}</p>}
+        {message && <p className="user-register-error">{message}</p>}
 
         <button onClick={handleRegister}>登録</button>
-        <button onClick={onClose}>閉じる</button>
+        <button
+          onClick={onClose}
+          onRegisterSuccess={() =>
+            setRegisterMessage("ユーザー登録が完了しました。")
+          }
+        >
+          閉じる
+        </button>
       </div>
     </div>
   );

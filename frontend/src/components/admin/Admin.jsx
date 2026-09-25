@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react";
 import { getUsers, updateUserRole } from "../../api/authApi";
+import { UserStar, Star } from "lucide-react";
 import "./Admin.css";
 
 function Admin() {
   const [users, setUsers] = useState([]);
-  const [message, setMessage] = useState("");
-/**
- * ユーザーの権限を変更する。
- *
- * 権限を更新した後、
- * usersのstateに変更内容を反映する。
- */
+  const [message, setMessage] = useState({ text: "", type: "" });
+  /**
+   * ユーザーの権限を変更する。
+   *
+   * 権限を更新した後、
+   * usersのstateに変更内容を反映する。
+   */
+  const showMessage = (text, type) => {
+    setMessage({ text: text, type: type });
+
+    setTimeout(() => {
+      setMessage({ text: "", type: "" });
+    }, 5000);
+  };
+
   const handleRoleChange = async (id, role) => {
     try {
       await updateUserRole(id, role);
@@ -18,29 +27,29 @@ function Admin() {
       setUsers((users) =>
         users.map((user) => (user.id === id ? { ...user, role: role } : user)),
       );
-      setMessage("権限を変更しました");
+      showMessage("権限を変更しました", "success");
     } catch {
-      setMessage("権限の変更に失敗しました");
+      showMessage("権限の変更に失敗しました", "error");
     }
   };
 
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
-        const userData = await getUsers();
-        setUsers(userData);
-      } catch (error) {
-        console.error(error);
-      }
+      const userData = await getUsers();
+      setUsers(userData);
     };
     fetchUsers();
   }, []);
 
   return (
     <div>
-      <h1>ユーザー管理</h1>
+      <h1 className="page-title">
+        <UserStar size={32} /> ユーザー管理
+      </h1>
       <div className="message-area">
-        {message && <p className="message">{message}</p>}
+        {message.text && (
+          <p className={`message ${message.type}`}>{message.text}</p>
+        )}
       </div>
       <table className="user-table">
         <thead>
@@ -53,11 +62,14 @@ function Admin() {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td>{user.nickName}</td>
+              <td>・ {user.nickName}</td>
 
               <td>
                 {user.role === "ADMIN" ? (
-                  <span>ADMIN</span>
+                  <span className="admin-icon">
+                    <Star size="22" color="#c7cf2e" />
+                    ADMIN
+                  </span>
                 ) : (
                   <select
                     value={user.role}

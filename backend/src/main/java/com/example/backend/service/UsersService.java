@@ -33,8 +33,35 @@ public class UsersService {
   }
 
   public Users findByEmail(String email) {
-    return usersRepository.findByEmail(email)
-        .orElseThrow();
+    return usersRepository.findByEmail(email).orElseThrow();
+  }
+
+  public void delete(String email) {
+    Users users = usersRepository.findByEmail(email).orElseThrow();
+
+    usersRepository.delete(users);
+  }
+
+  public Users updateEmail(String currentEmail, String newEmail) {
+    if (usersRepository.existsByEmail(newEmail)) {
+      throw new IllegalArgumentException("EMAIL_ALREADY_EXISTS");
+    }
+    Users users = usersRepository.findByEmail(currentEmail).orElseThrow();
+
+    users.setEmail(newEmail);
+
+    return usersRepository.save(users);
+  }
+
+  public void updatePassword(String email, String password) {
+    Users users = usersRepository.findByEmail(email).orElseThrow();
+
+    if (passwordEncoder.matches(password, users.getPasswordHash())) {
+      throw new IllegalArgumentException("SAME_PASSWORD");
+    }
+
+    users.setPasswordHash(passwordEncoder.encode(password));
+    usersRepository.save(users);
   }
 
   public Users register(RegisterRequest request) {
@@ -47,10 +74,11 @@ public class UsersService {
     Users users = new Users();
 
     users.setEmail(request.getEmail());
-    users.setPasswordHash(
-        passwordEncoder.encode(request.getPassword())
-    );
+
+    users.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+
     users.setRole("STAFF");
+
     users.setNickName(request.getNickName());
 
     return usersRepository.save(users);
@@ -75,6 +103,7 @@ public class UsersService {
     return usersRepository.findAll().stream()
         .map(users -> new UserResponse(
             users.getId(),
+            users.getEmail(),
             users.getNickName(),
             users.getRole()
         )).toList();

@@ -1,4 +1,11 @@
 import "./Home.css";
+import {
+  Boxes,
+  ChevronsDown,
+  CircleCheck,
+  TriangleAlert,
+  House,
+} from "lucide-react";
 
 function Home({
   items,
@@ -7,16 +14,21 @@ function Home({
   alertItems,
   getStockStatus,
   setCurrentPage,
+  setInitialStatus,
 }) {
   return (
     <>
       <div>
-        <h1>ホーム</h1>
+        <h1 className="page-title">
+          {" "}
+          <House size={32} />
+          ホーム
+        </h1>
 
         <div className="home-summary">
           <div className="summary-card">
             <div className="icon" style={{ color: " #b08d57" }}>
-              ▣
+              <Boxes size={36} />
             </div>
             <div className="summary-text">
               <p style={{ color: " #b08d57" }}>全商品数</p>
@@ -29,7 +41,7 @@ function Home({
 
           <div className="summary-card">
             <div className="icon" style={{ color: "#289046" }}>
-              ✓
+              <CircleCheck size={36} />
             </div>
             <div className="summary-text">
               <p style={{ color: "#289046" }}>正常</p>
@@ -42,7 +54,7 @@ function Home({
 
           <div className="summary-card">
             <div className="icon" style={{ color: "#e8942f" }}>
-              !
+              <ChevronsDown size={36} />
             </div>
             <div className="summary-text">
               <p style={{ color: "#e8942f" }}>少ない</p>
@@ -55,7 +67,7 @@ function Home({
 
           <div className="summary-card">
             <div className="icon" style={{ color: "#d93636" }}>
-              ⚠
+              <TriangleAlert size={36} />
             </div>
             <div className="summary-text">
               <p style={{ color: "#d93636" }}>注意</p>
@@ -66,7 +78,7 @@ function Home({
             </div>
           </div>
         </div>
-        <div className="home-stock-sections">
+        <div className="home-stock-list">
           <div className="home-alert">
             <h2>在庫注意の商品</h2>
 
@@ -94,8 +106,10 @@ function Home({
               </div>
             ))}
             <button
-              className="alert-list-button"
-              onClick={() => setCurrentPage("inventoryAlert")}
+              onClick={() => {
+                setInitialStatus("注意");
+                setCurrentPage("items");
+              }}
             >
               一覧を見る
             </button>
@@ -127,8 +141,10 @@ function Home({
               </div>
             ))}
             <button
-              className="few-list-button"
-              onClick={() => setCurrentPage("inventoryAlert")}
+              onClick={() => {
+                setInitialStatus("少ない");
+                setCurrentPage("items");
+              }}
             >
               一覧を見る
             </button>

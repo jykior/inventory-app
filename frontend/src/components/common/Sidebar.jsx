@@ -1,4 +1,5 @@
 import "./Common.css";
+import { Settings, House, Package,UserStar } from "lucide-react";
 
 function Sidebar({ currentPage, setCurrentPage, user }) {
   return (
@@ -11,32 +12,27 @@ function Sidebar({ currentPage, setCurrentPage, user }) {
           className={currentPage === "home" ? "active" : ""}
           onClick={() => setCurrentPage("home")}
         >
-          ⌂ ホーム
+          <House size={24} />
+          ホーム
         </button>
         <button
           className={currentPage === "items" ? "active" : ""}
           onClick={() => setCurrentPage("items")}
         >
-          ▣ 商品一覧
-        </button>
-        <button
-          className={currentPage === "inventoryAlert" ? "active" : ""}
-          onClick={() => setCurrentPage("inventoryAlert")}
-        >
-          ⚠ 在庫注意
+          <Package size={24} /> 商品一覧
         </button>
         <button
           className={currentPage === "setting" ? "active" : ""}
           onClick={() => setCurrentPage("setting")}
         >
-          ⚙ 設定
+          <Settings size={24} /> 設定
         </button>
         {user?.role === "ADMIN" && (
           <button
             className={currentPage === "users" ? "active" : ""}
             onClick={() => setCurrentPage("admin")}
           >
-            ♙ ユーザー管理
+            <UserStar size={24} /> ユーザー管理
           </button>
         )}
       </nav>

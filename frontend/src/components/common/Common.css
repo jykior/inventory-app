@@ -1,4 +1,3 @@
-/*サイドバー*/
 .sidebar h1 {
   color: #c9a45c;
   font-size: x-large;
@@ -40,6 +39,9 @@
   cursor: pointer;
   white-space: nowrap;
   border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .sidebar button.active {

@@ -1,40 +1,49 @@
 import { useState } from "react";
 import { login, guestLogin } from "../../api/authApi";
+import { DoorOpen, KeyRound, Mail, UserPlus } from "lucide-react";
 import UserRegisterModal from "./UserRegisterModal";
 import "./Auth.css";
 
 function Login({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState({ text: "", type: "" });
   const [showUserRegister, setShowUserRegister] = useState(false);
-/**
- * ログイン処理を行う。
- *
- * 入力内容をチェックし、
- * ログインした後にログイン情報をApp.jsxへ渡す。
- */
+  /**
+   * ログイン処理を行う。
+   *
+   * 入力内容をチェックし、
+   * ログインした後にログイン情報をApp.jsxへ渡す。
+   */
+  const showMessage = (text, type) => {
+    setMessage({ text: text, type: type });
+
+    setTimeout(() => {
+      setMessage({ text: "", type: "" });
+    }, 5000);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+
     if (!email.trim()) {
-      setError("メールアドレスを入力してください");
+      showMessage("メールアドレスを入力してください", "error");
       return;
     }
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailPattern.test(email)) {
-      setError("正しいメールアドレスを入力してください");
+      showMessage("正しいメールアドレスを入力してください", "error");
       return;
     }
     if (!password.trim()) {
-      setError("パスワードを入力してください");
+      showMessage("パスワードを入力してください", "error");
       return;
     }
 
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#]{6,}$/;
     if (!passwordPattern.test(password)) {
-      setError("パスワードは6文字以上の英数字で入力してください");
+      showMessage("パスワードは6文字以上の英数字で入力してください", "error");
       return;
     }
 
@@ -43,24 +52,26 @@ function Login({ onLogin }) {
       onLogin(user);
     } catch (error) {
       if (error.message === "LOGIN_FAILED") {
-        setError("メールアドレスまたはパスワードが正しくありません");
+        showMessage(
+          "メールアドレスまたはパスワードが正しくありません",
+          "error",
+        );
       } else {
-        setError("ログインに失敗しました");
+        showMessage("ログインに失敗しました", "error");
       }
     }
   };
-/**
- * ゲストログインを行う。
- *
- * ゲストログインした後にゲストログイン情報をApp.jsxへ渡す。
- */
+  /**
+   * ゲストログインを行う。
+   *
+   * ゲストログインした後にゲストログイン情報をApp.jsxへ渡す。
+   */
   const handleGuestLogin = async () => {
-    setError("");
     try {
       const user = await guestLogin();
       onLogin(user);
     } catch (error) {
-      setError("ゲストログインに失敗しました");
+      showMessage("ゲストログインに失敗しました", "error");
     }
   };
 
@@ -76,7 +87,7 @@ function Login({ onLogin }) {
 
         <h3>お店の在庫を一目で把握</h3>
 
-        <p className="login-message">在庫状況をいつでも正確に。</p>
+        <p className="login-sub-title">在庫状況をいつでも正確に。</p>
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="login-field">
@@ -84,7 +95,9 @@ function Login({ onLogin }) {
               <span className="login-text">メールアドレス</span>
             </label>
             <div className="login-input">
-              <span className="login-icon">✉</span>
+              <span className="login-icon">
+                <Mail size={24} />
+              </span>
               <input
                 type="email"
                 placeholder="メールアドレス"
@@ -98,7 +111,9 @@ function Login({ onLogin }) {
               <span className="login-text">パスワード</span>
             </label>
             <div className="login-input">
-              <span className="login-icon">🗝</span>
+              <span className="login-icon">
+                <KeyRound size={24} />
+              </span>
               <input
                 type="password"
                 placeholder="パスワード"
@@ -108,7 +123,9 @@ function Login({ onLogin }) {
             </div>
           </div>
 
-          {error && <p className="login-error">{error}</p>}
+          {message.text && (
+            <p className={`login-message ${message.type}`}>{message.text}</p>
+          )}
 
           <button type="submit" className="login-button">
             ログイン
@@ -127,7 +144,9 @@ function Login({ onLogin }) {
             className="user-register-button"
             onClick={() => setShowUserRegister(true)}
           >
-            <span>♙</span>
+            <span>
+              <UserPlus size={22} />
+            </span>
             新規登録
           </button>
 
@@ -136,13 +155,21 @@ function Login({ onLogin }) {
             className="guest-button"
             onClick={handleGuestLogin}
           >
-            <span>♙</span>
+            <span>
+              <DoorOpen size={22} />
+            </span>
             ゲストログイン
           </button>
         </div>
       </div>
+
       {showUserRegister && (
-        <UserRegisterModal onClose={() => setShowUserRegister(false)} />
+        <UserRegisterModal
+          onClose={() => setShowUserRegister(false)}
+          onRegisterSuccess={() => {
+            showMessage("ユーザー登録が完了しました。", "success");
+          }}
+        />
       )}
     </div>
   );

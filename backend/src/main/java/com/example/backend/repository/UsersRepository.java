@@ -12,5 +12,4 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
 
   boolean existsByRole(String role);
 
-  void deleteByRole(String role);
 }

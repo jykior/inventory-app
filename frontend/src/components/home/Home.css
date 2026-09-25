@@ -75,7 +75,7 @@
   font-size: 18px;
 }
 
-.home-stock-sections {
+.home-stock-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
@@ -110,21 +110,19 @@
   white-space: nowrap;
 }
 
-.alert-list-button,
-.few-list-button {
+.home-stock-list button {
   width: 100%;
   padding: 14px;
   margin-top: 20px;
-  background: white;
-  border: 1px solid #c9b79c;
+  background: #fff;
+  border: 1px solid #c79a45;
   border-radius: 6px;
-  color: #5a4a36;
+  color: #b07d18;
   font-size: 16px;
   cursor: pointer;
   transition: 0.2s;
 }
 
-.alert-list-button:hover,
-.few-list-button:hover {
+.home-stock-list button:hover {
   background: #f7f3ec;
 }

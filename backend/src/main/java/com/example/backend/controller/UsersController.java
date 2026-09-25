@@ -1,9 +1,9 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.request.AccountUpdateRequest;
 import com.example.backend.dto.request.LoginRequest;
 import com.example.backend.dto.request.RegisterRequest;
 import com.example.backend.dto.request.RoleRequest;
-import com.example.backend.dto.response.RegisterResponse;
 import com.example.backend.dto.response.UserResponse;
 import com.example.backend.entity.Users;
 import com.example.backend.service.UsersService;
@@ -12,11 +12,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,6 +66,7 @@ public class UsersController {
 
       return new UserResponse(
           users.getId(),
+          users.getEmail(),
           users.getNickName(),
           users.getRole());
     } catch (AuthenticationException e) {
@@ -72,10 +75,11 @@ public class UsersController {
   }
 
   @PostMapping("/register")
-  public RegisterResponse register(@RequestBody RegisterRequest request) {
+  public UserResponse register(@RequestBody RegisterRequest request) {
     try {
       Users users = usersService.register(request);
-      return new RegisterResponse(
+
+      return new UserResponse(
           users.getId(),
           users.getEmail(),
           users.getNickName(),
@@ -99,6 +103,66 @@ public class UsersController {
       }
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @PatchMapping("/email")
+  public UserResponse updateEmail(
+      @RequestBody AccountUpdateRequest request,
+      Authentication authentication,
+      HttpServletRequest httpServletRequest,
+      HttpServletResponse httpServletResponse) {
+
+    try {
+      Users users = usersService.updateEmail(
+          authentication.getName(),
+          request.getEmail()
+      );
+
+      Authentication newAuthentication = new UsernamePasswordAuthenticationToken(
+          users.getEmail(),
+          null,
+          authentication.getAuthorities()
+      );
+
+      SecurityContext context = SecurityContextHolder.createEmptyContext();
+      context.setAuthentication(newAuthentication);
+      SecurityContextHolder.setContext(context);
+
+      securityContextRepository.saveContext(
+          context,
+          httpServletRequest,
+          httpServletResponse
+      );
+
+      return new UserResponse(
+          users.getId(),
+          users.getEmail(),
+          users.getNickName(),
+          users.getRole()
+      );
+    } catch (IllegalArgumentException e) {
+      if ("EMAIL_ALREADY_EXISTS".equals(e.getMessage())) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT);
+      }
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @PatchMapping("/password")
+  public void updatePassword(Authentication authentication, @RequestBody AccountUpdateRequest request) {
+    try {
+      usersService.updatePassword(authentication.getName(), request.getPassword());
+    } catch (IllegalArgumentException e) {
+      if ("SAME_PASSWORD".equals(e.getMessage())) {
+        throw new ResponseStatusException(HttpStatus.CONFLICT);
+      }
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @DeleteMapping
+  public void delete(Authentication authentication) {
+    usersService.delete(authentication.getName());
   }
 
   @GetMapping("/users")

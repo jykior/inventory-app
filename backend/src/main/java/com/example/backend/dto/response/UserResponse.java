@@ -9,11 +9,13 @@ import lombok.Setter;
 public class UserResponse {
 
   private Long id;
+  private String email;
   private String nickName;
   private String role;
 
-  public UserResponse(Long id, String nickName, String role) {
+  public UserResponse(Long id, String email, String nickName, String role) {
     this.id = id;
+    this.email = email;
     this.nickName = nickName;
     this.role = role;
   }

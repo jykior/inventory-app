@@ -1,4 +1,5 @@
 import { deleteItem } from "../../api/itemApi";
+import { Package } from "lucide-react";
 import "./Inventory.css";
 /**
  * 商品一覧を表示する。
@@ -20,7 +21,10 @@ function Items({
   return (
     <>
       <div className="items-header">
-        <h1>商品一覧</h1>
+        <h1 className="page-title">
+          <Package size={32} />
+          商品一覧
+        </h1>
         <button
           className="item-add-button"
           onClick={() => setIsItemModalOpen(true)}

@@ -16,6 +16,12 @@
   color: #d93636;
 }
 
+.alert-box-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .filter-area {
   display: flex;
   align-items: center;
@@ -66,10 +72,6 @@
   margin-bottom: 20px;
 }
 
-.items-header h1 {
-  margin: 0;
-}
-
 .item-add-button {
   width: 130px;
   height: 40px;
@@ -101,7 +103,7 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   table-layout: fixed;
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 .item-table th,

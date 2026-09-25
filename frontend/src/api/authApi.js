@@ -14,7 +14,6 @@ export const login = async (email, password) => {
     }
     throw new Error("LOGIN_REQUEST_FAILED");
   }
-
   return await response.json();
 };
 
@@ -71,7 +70,7 @@ export const getUsers = async () => {
     credentials: "include",
   });
   if (!response.ok) {
-    throw new Error("ユーザー一覧の取得に失敗しました");
+    throw new Error("GET_USERS_FAILED");
   }
   return await response.json();
 };
@@ -87,6 +86,51 @@ export const updateUserRole = async (id, role) => {
   });
 
   if (!response.ok) {
-    throw new Error("権限の変更に失敗しました");
+    throw new Error("UPDATE_USER_ROLE_FAILED");
+  }
+};
+
+export const updateEmail = async (email) => {
+  const response = await fetch(`http://localhost:8080/api/auth/email`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ email }),
+  });
+  if (!response.ok) {
+    if (response.status === 409) {
+      throw new Error("EMAIL_ALREADY_EXISTS");
+    }
+    throw new Error("UPDATE_EMAIL_FAILED");
+  }
+  return await response.json();
+};
+
+export const updatePassword = async (password) => {
+  const response = await fetch(`http://localhost:8080/api/auth/password`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({ password }),
+  });
+  if (!response.ok) {
+    if (response.status === 409) {
+      throw new Error("SAME_PASSWORD");
+    }
+    throw new Error("UPDATE_PASSWORD_FAILED");
+  }
+};
+
+export const deleteAccount = async () => {
+  const response = await fetch(`http://localhost:8080/api/auth`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("ACCOUNT_DELETE_FAILED");
   }
 };

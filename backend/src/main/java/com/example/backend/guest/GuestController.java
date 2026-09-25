@@ -53,6 +53,7 @@ public class GuestController {
 
       return new UserResponse(
           guest.getId(),
+          guest.getEmail(),
           guest.getNickName(),
           guest.getRole()
       );

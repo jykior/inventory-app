@@ -50,31 +50,30 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/login", "/api/auth/register", "/api/guest/login", "/error").permitAll()
             .requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
-            // 商品操作
-            .requestMatchers(HttpMethod.GET, "/api/items")
+            // 商品・カテゴリ操作
+            .requestMatchers(HttpMethod.GET, "/api/items","/api/categories")
             .hasAnyRole("ADMIN", "MANAGER", "STAFF", "GUEST")
-            .requestMatchers(HttpMethod.POST, "/api/items")
+
+            .requestMatchers(HttpMethod.POST, "/api/items","/api/categories")
             .hasAnyRole("ADMIN", "MANAGER", "GUEST")
+
             .requestMatchers(HttpMethod.PUT, "/api/items/*")
             .hasAnyRole("ADMIN", "MANAGER", "GUEST")
-            .requestMatchers(HttpMethod.DELETE, "/api/items/*")
+
+            .requestMatchers(HttpMethod.DELETE, "/api/items/*","/api/categories/*")
             .hasAnyRole("ADMIN", "MANAGER", "GUEST")
 
             // 在庫数操作
             .requestMatchers(HttpMethod.PATCH, "/api/items/*/stock")
             .hasAnyRole("ADMIN", "MANAGER", "STAFF", "GUEST")
 
-            // カテゴリ操作
-            .requestMatchers(HttpMethod.GET, "/api/categories")
-            .hasAnyRole("ADMIN", "MANAGER", "STAFF", "GUEST")
-            .requestMatchers(HttpMethod.POST, "/api/categories")
-            .hasAnyRole("ADMIN", "MANAGER", "GUEST")
-            .requestMatchers(HttpMethod.DELETE, "/api/categories/*")
-            .hasAnyRole("ADMIN", "MANAGER", "GUEST")
-
-            // 権限管理
+            // 権限変更
             .requestMatchers(HttpMethod.PATCH, "/api/auth/*/role")
             .hasAnyRole("ADMIN")
+
+            // メールアドレス変更
+            .requestMatchers(HttpMethod.PATCH, "/api/auth/email")
+            .hasAnyRole("ADMIN", "MANAGER", "STAFF", "GUEST")
 
             .anyRequest()
             .authenticated()
